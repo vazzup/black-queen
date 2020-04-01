@@ -1,18 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Django Channels Example</h1>
+  <h1>Online JSQ Simulator - BlackQueen</h1>
   <p class="deck">
-    This is a demo using <a href="http://channels.readthedocs.org/en/latest/">
-    Django Channels</a> to implement a simple WebSocket-based chat server.
-    You can see the <a href="https://github.com/jacobian/channels-example">
-    code on GitHub</a>, or try the app:
+    BlackQueen (often accompanied with Sheesha) is a popular game amongst the South Asian
+    inhabitants we've come to call "Indians".
+    One can often find such Indians, flocking in groups to JSQ Cafe (or other Sheesha joints)
+    to play BlackQueen.
+  </p>
+  <p class="deck">
+    BlackQueen is a classic team based Indian Playing Card Game based on bidding.
+    This website allows users to create rooms and play the game with their friends over the internet.
+    Please note : Users are responsible to arranging their own Sheesha while playing this online.
+  </p>
+  <p class="deck">
+    I would like to express major thanks to Naeem. This project would not have been possible without you.
+    As I tear up looking at unreplaced coal on my Sheesha, I'd like to thank Waghi as well.
+    Thanks for understanding "that" drink when I would merely scratch my throat.
   </p>
   <p>
-    <a class="button button-primary" href="{% url 'new_room' %}">Create new chat room</a>
+    <a class="button button-primary" href="{% url 'new_room' %}">Create new JSQ table</a>
+    Do not worry, the tables created here always have the coushined seats.
   </p>
   <p class="quiet">
     Or, you can visit <code>{{ request.scheme }}://{{ request.get_host }}/any-path-you-want</code> 
-    to create a arbitrary room or join one whose name you know.
+    to create a arbitrary JSQ table or join one whose name you know.
   </p>
 {% endblock content %}
