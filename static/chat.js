@@ -27,6 +27,7 @@ $(function() {
             ele.append(
                 $("<td></td>").text(data.handle)
             )
+            players.append(ele)
         }
         if(data.type == 'room'){
            if(data.locked){
