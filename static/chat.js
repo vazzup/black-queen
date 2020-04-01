@@ -5,29 +5,85 @@ $(function() {
 
     chatsock.onmessage = function(message) {
         var data = JSON.parse(message.data);
-        var chat = $("#chat")
-        var ele = $('<tr></tr>')
+        if (data.type == 'dm'){
+            var chat = $("#chat")
+            var ele = $('<tr></tr>')
 
-        ele.append(
-            $("<td></td>").text(data.timestamp)
-        )
-        ele.append(
-            $("<td></td>").text(data.handle)
-        )
-        ele.append(
-            $("<td></td>").text(data.message)
-        )
+            ele.append(
+                $("<td></td>").text(data.timestamp)
+            )
+            ele.append(
+                $("<td></td>").text(data.handle)
+            )
+            ele.append(
+                $("<td></td>").text(data.message)
+            )
 
-        chat.append(ele)
+            chat.append(ele)
+        }
+        if(data.type == 'player'){
+            var players = $("#players")
+            var ele = $('<tr></tr>')
+            ele.append(
+                $("<td></td>").text(data.handle)
+            )
+        }
+        if(data.type == 'room'){
+           if(data.locked){
+               alert("Room has been locked")
+           }
+            else{
+                alert("You need 5 or 7 players to start the game")
+            }
+        }
     };
 
     $("#chatform").on("submit", function(event) {
-        var message = {
-            handle: $('#handle').val(),
-            message: $('#message').val(),
+        if($('#handle').val()){
+            $("#handle").prop("readonly", true);
+            var message = {
+                handle: $('#handle').val(),
+                message: $('#message').val(),
+                type: 'dm',
+            }
+            chatsock.send(JSON.stringify(message));
+            $("#message").val('').focus();
         }
-        chatsock.send(JSON.stringify(message));
-        $("#message").val('').focus();
+        else{
+            alert("Please enter a handle.");
+        }
         return false;
     });
+
+    $("#startgame").on("submit", function(event) {
+        if($('#handle').val()){
+            $("#handle").prop("readonly", true);
+            var message = {
+                handle: $('#handle').val(),
+                type: 'start',
+            }
+            chatsock.send(JSON.stringify(message));
+            $("#message").val('').focus();
+        }
+        else{
+            alert("Please enter a handle.");
+        }
+        return false;
+    });
+    $("#joingame").on("submit", function(event) {
+        if($('#handle').val()){
+            $("#handle").prop("readonly", true);
+            var message = {
+                handle: $('#handle').val(),
+                type: 'join',
+            }
+            chatsock.send(JSON.stringify(message));
+            $("#message").val('').focus();
+        }
+        else{
+            alert("Please enter a handle.");
+        }
+        return false;
+    });
+
 });

@@ -56,17 +56,23 @@ def ws_receive(message):
         log.debug("ws message isn't json text=%s", text)
         return
 
-    if set(data.keys()) != set(('handle', 'message')):
-        log.debug("ws message unexpected format data=%s", data)
-        return
-
     if data:
-        log.debug('chat message room=%s handle=%s message=%s',
-            room.label, data['handle'], data['message'])
-        m = room.messages.create(**data)
-
-        # See above for the note about Group
-        Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
+        log.debug('chat message room=%s handle=%s type=%s',
+            room.label, data['handle'], data['type'])
+        if data['type'] == 'start':
+            if len(room.players) == 5 and len(room.players) == 7:
+                room.locked = True
+                room.save()
+                Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
+            else:
+                Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
+        if data['type'] == 'join':
+            p = room.players.create(handle=data['handle'])
+            Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(p.as_dict())})
+        if data['type'] == 'dm':
+            m = room.messages.create(**data)
+            # See above for the note about Group
+            Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
 
 @channel_session
 def ws_disconnect(message):

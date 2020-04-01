@@ -10,7 +10,29 @@
   <p>
     <label for="handle">Your name:</label>
     <input id="handle" type="text" placeholder="handle">
+    <form id="joingame">
+        <button type="submit" id="join">Join Game</button>
+    </form>
   </p>
+  <table id="players">
+      <tbody>
+        {% for player in players %}
+          <tr>
+            <td>{{ player.name }}</td>
+          </tr> 
+        {% endfor %}
+      </tbody>
+      <tfoot>
+      <tr>
+        <td>Start Game : </td>
+        <td colspan=2>
+          <form id="startgame">
+            <button type="submit" id="start">Lock Room and Start Game</button>
+           </form>
+        </td>
+      </tfoot>
+    </table>
+
   <form id="chatform">
     <table id="chat">
       <tbody>
@@ -32,7 +54,6 @@
       </tfoot>
     </table>
   </form>
-  <button type="submit" id="startgame">Lock Room and Start Game</button>
 {% endblock content %}
 
 {% block afterbody %}
