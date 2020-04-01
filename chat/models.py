@@ -14,7 +14,7 @@ class Room(models.Model):
     def as_dict(self):
         return {'name': self.name, 'type': 'room', 'locked': self.locked, 'label': self.label}
 
-class Player(modles.Model):
+class Player(models.Model):
     room = models.ForeignKey(Room, related_name='players')
     handle = models.TextField()
 
