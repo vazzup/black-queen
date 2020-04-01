@@ -28,6 +28,9 @@ $(function() {
                 $("<td></td>").text(data.handle)
             )
             players.append(ele)
+            if(data.handle == $('#handle').val()){
+                $("#join").attr("disabled","disabled");
+            }
         }
         if(data.type == 'room'){
            if(data.locked){
