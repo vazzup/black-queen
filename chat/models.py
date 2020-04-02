@@ -31,7 +31,7 @@ class Player(models.Model):
 
 class Game(models.Model):
     room = models.ForeignKey(Room, related_name='games')
-    hakkam = models.IntegerField(defaul=5)
+    hakkam = models.IntegerField(default=5)
     current_bid = models.IntegerField(default=150)
     winning_bid = models.IntegerField(null=True, default=None)
     bid_winner = models.ForeignKey(Player, null=True, default=None)
