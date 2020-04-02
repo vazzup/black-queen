@@ -1,7 +1,7 @@
 import re
 import json
 import logging
-from channels import Group
+from channels import Group, Channel
 from channels.sessions import channel_session
 from .models import Room
 
