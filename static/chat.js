@@ -5,6 +5,9 @@ $(function() {
 
     chatsock.onmessage = function(message) {
         var data = JSON.parse(message.data);
+        if (data.type == 'alert'){
+            alert(data.message)
+        }
         if (data.type == 'dm'){
             var chat = $("#chat")
             var ele = $('<tr></tr>')
