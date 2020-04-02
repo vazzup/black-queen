@@ -60,9 +60,11 @@ def ws_receive(message):
         log.debug('chat message room=%s handle=%s type=%s',
             room.label, data['handle'], data['type'])
         if data['type'] == 'start':
+            log.debug('room players' + str(room.players.count()))
             if room.players.count() == 5 and room.players.count() == 7:
                 room.locked = True
                 room.save()
+                log.debug(room.as_dict())
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
             else:
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
