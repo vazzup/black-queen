@@ -61,7 +61,7 @@ def ws_receive(message):
             room.label, data['handle'], data['type'])
         if data['type'] == 'start':
             log.debug('room players' + str(room.players.count()))
-            if room.players.count() == 5 and room.players.count() == 7:
+            if room.players.count() == 5 or room.players.count() == 7:
                 room.locked = True
                 room.save()
                 log.debug(room.as_dict())
