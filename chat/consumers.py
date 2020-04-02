@@ -76,7 +76,9 @@ def ws_receive(message):
                 p = room.players.create(handle=data['handle'])
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(p.as_dict())})
             else:
-                Channel(message.reply_channel).send({'text': json.dumps({'type': 'alert', 'message': 'handle already used in room, please choose another'})})
+                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
+                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps({'type': 'alert', 'message': 'handle already used in room, please choose another'})})
+                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).discard(message.reply_channel)
         if data['type'] == 'dm':
             m = room.messages.create(**data)
             # See above for the note about Group
