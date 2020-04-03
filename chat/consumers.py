@@ -75,7 +75,7 @@ def ws_receive(message):
                 if room.players.count() == 5:
                     all_cards = range(40) + range(40)
                     per_person = 16
-                else if room.players.count() == 7:
+                elif room.players.count() == 7:
                     all_cards = range(49) + range(49)
                     per_person = 14
                 import random
