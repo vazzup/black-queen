@@ -35,6 +35,15 @@ def ws_connect(message):
 
     message.channel_session['room'] = room.label
 
+
+def sorter(cards):
+    card_list = []
+    for card in cards:
+        card_list.append((card%4, card//4, card))
+    card_list.sort()
+    return [card[2] for card in card_list]
+
+
 @channel_session
 def ws_receive(message):
     # Look up the room from the channel session, bailing if it doesn't exist
@@ -82,7 +91,7 @@ def ws_receive(message):
                 random.shuffle(all_cards)
                 player_idx = 0
                 for player in room.players.all():
-                    cards[player.handle] = all_cards[player_idx*per_person:(player_idx*per_person)+per_person]
+                    cards[player.handle] = sorter(all_cards[player_idx*per_person:(player_idx*per_person)+per_person])
                     player_idx += 1
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(cards)})
             else:
