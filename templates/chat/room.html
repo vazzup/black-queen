@@ -2,11 +2,13 @@
 
 {% block content %}
   {% load staticfiles %}
-  <h1>{{ room.label }}</h1>
-  <p class="quiet">
-    Before the game has started, Anyone with this URL can join the Table and Participate in the BlackQueen game: 
-    <code>{{ request.scheme }}://{{ request.get_host }}/{{ room.label }}</code> 
-  </p>
+  <div id="toppart">
+      <h1>{{ room.label }}</h1>
+      <p class="quiet">
+        Before the game has started, Anyone with this URL can join the Table and Participate in the BlackQueen game: 
+        <code>{{ request.scheme }}://{{ request.get_host }}/{{ room.label }}</code> 
+      </p>
+  </div>
   <p>
     <label for="handle">Your name:</label>
     <input id="handle" type="text" placeholder="handle">
@@ -14,8 +16,9 @@
         <button type="submit" id="join">Join Game</button>
     </form>
   </p>
-  <div class="playingCards">
-    <ul class="hand" id="hand">
+  <h5>Your Cards</h5>
+  <div class="playingCards" style="display:table;">
+    <ul class="table" id="hand">
 
     </ul>
   </div>

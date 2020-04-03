@@ -42,6 +42,11 @@ $(function() {
         }
         if(data.type == 'collect'){
             // we need to collect our own cards by making a websocket call
+            //hide some elements while at it
+            //
+            $('#players').hide();
+            $('#joingame').hide();
+            $('#toppart').hide();
             var cards = $("#hand")
             var mycards = data[$('#handle').val()]
             for (var i = 0; i < mycards.length; i++) {
