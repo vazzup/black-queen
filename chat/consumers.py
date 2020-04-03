@@ -103,10 +103,11 @@ def ws_receive(message):
                     if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
                         next_player = player
                         break
-                for room.players.all()[0:start_index+1]:
-                    if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
-                        next_player = player
-                        break
+                if next_player == None:
+                    for player in room.players.all()[0:start_index+1]:
+                        if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
+                            next_player = player
+                            break
 
                 cards['start'] = start_player.handle
                 cards['next'] = next_player.handle
