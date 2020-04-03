@@ -11,6 +11,6 @@ psycopg2==2.7.3.2
 redis==2.10.5
 six==1.10.0
 Twisted==17.1
-txaio==2.2.1
+txaio==2.6.1
 wheel==0.24.0
 zope.interface==4.1.3
