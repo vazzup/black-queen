@@ -99,7 +99,11 @@ def ws_receive(message):
                 game.bids.create(player=start_player, value=150)
                 # from players of the room find next after index
                 next_player = None
-                for player in room.players.all()[start_index+1:room.players.count()] + room.players.all()[0:start_index+1]:
+                for player in room.players.all()[start_index+1:room.players.count()]:
+                    if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
+                        next_player = player
+                        break
+                for room.players.all()[0:start_index+1]:
                     if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
                         next_player = player
                         break
