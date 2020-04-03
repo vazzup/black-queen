@@ -151,7 +151,7 @@ $(function() {
     });
 
     $("#chatform").on("submit", function(event) {
-        if($('#handle').val() and $('#message').val()){
+        if($('#handle').val() && $('#message').val()){
             $("#handle").prop("readonly", true);
             var message = {
                 handle: $('#handle').val(),
