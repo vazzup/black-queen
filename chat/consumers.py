@@ -94,6 +94,9 @@ def ws_receive(message):
                     cards[player.handle] = sorter(all_cards[player_idx*per_person:(player_idx*per_person)+per_person])
                     player_idx += 1
                 start_index = room.games.count() % room.players.count()
+                log.debug(str(start_index))
+                log.debug(str(room.games.count()))
+                log.debug(str(room.players.count()))
                 start_player = room.players.all()[start_index]
                 game = room.games.create()
                 game.bids.create(player=start_player, value=150)

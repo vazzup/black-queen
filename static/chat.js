@@ -59,7 +59,7 @@ $(function() {
             $('#cards_header').removeAttr('hidden');
             $('#bids_table').removeAttr('hidden');
             $('#bid-'+data['start']).html('150 (Minimum)');
-            $('#bid-'+data['next']).append('(*)');
+            $('#bid-'+data['next']).html('(*)');
 
             var cards = $("#hand")
             var mycards = data[$('#handle').val()]
