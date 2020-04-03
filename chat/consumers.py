@@ -32,7 +32,7 @@ def ws_connect(message):
     # Need to be explicit about the channel layer so that testability works
     # This may be a FIXME?
     Group('chat-'+label, channel_layer=message.channel_layer).add(message.reply_channel)
-    message.reply_channel.send({'text': json.dump({'ping' : 'pong'})})
+    message.reply_channel.send({'text': json.dumps({'ping' : 'pong'})})
 
     message.channel_session['room'] = room.label
 
