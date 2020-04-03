@@ -5,6 +5,7 @@ $(function() {
 
     chatsock.onmessage = function(message) {
         var data = JSON.parse(message.data);
+        console.log(data);
         if (data.type == 'alert'){
             alert(data.message)
         }
