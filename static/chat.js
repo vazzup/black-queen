@@ -13,9 +13,6 @@ $(function() {
             var ele = $('<tr></tr>')
 
             ele.append(
-                $("<td></td>").text(data.timestamp)
-            )
-            ele.append(
                 $("<td></td>").text(data.handle)
             )
             ele.append(

@@ -15,6 +15,11 @@
     </form>
   </p>
   <table id="players">
+      <thead>
+        <tr>
+            <th>Players</th>
+        </tr>
+      </thead>
       <tbody>
         {% for player in players %}
           <tr>
@@ -38,7 +43,6 @@
       <tbody>
         {% for message in messages %}
           <tr>
-            <td>{{ message.formatted_timestamp }}</td>
             <td>{{ message.handle }}</td>
             <td>{{ message.message }}</td>
           </tr> 
