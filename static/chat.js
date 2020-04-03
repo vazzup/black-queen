@@ -204,6 +204,6 @@ $(function() {
 		}
 		chatsock.send(JSON.stringify(message));
 	}
-	setInterval(heartbeat, 9999);
+	setInterval(heartbeat, 19999);
 
 });

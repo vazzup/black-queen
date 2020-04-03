@@ -146,10 +146,10 @@ def ws_receive(message):
                 per_person = None
                 all_cards = None
                 if room.players.count() == 5:
-                    all_cards = range(40) + range(40)
+                    all_cards = list(range(40)) + list(range(40))
                     per_person = 16
                 elif room.players.count() == 7:
-                    all_cards = range(49) + range(49)
+                    all_cards = list(range(49)) + list(range(49))
                     per_person = 14
                 import random
                 random.shuffle(all_cards)
@@ -200,6 +200,9 @@ def ws_receive(message):
             m = room.messages.create(handle=data['handle'], message=data['message'])
             Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
         if data['type'] == 'beat':
+            Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
+            Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps({'ping': 'pong')})
+            Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).discard(message.reply_channel)
             pass
 
 @channel_session
