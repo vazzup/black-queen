@@ -54,7 +54,7 @@ def ws_receive(message):
         log.debug('no room in channel_session')
         return
     except Room.DoesNotExist:
-        log.debug('recieved message, buy room does not exist label=%s', label)
+        log.debug('recieved message, but room does not exist label=%s', label)
         return
 
     # Parse out a chat message from the content text, bailing if it doesn't
@@ -66,8 +66,8 @@ def ws_receive(message):
         return
 
     if data:
-        log.debug('chat message room=%s handle=%s type=%s',
-            room.label, data['handle'], data['type'])
+        log.debug('chat message room=%s handle=%s type=%s data=%s',
+            room.label, data['handle'], data['type'], str(data))
         if data['type'] == 'bid':
             player_bidding = room.players.filter(handle=data['handle']).last()
             game = room.games.filter(active=True).last()
