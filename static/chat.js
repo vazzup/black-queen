@@ -199,6 +199,7 @@ $(function() {
 	function heartbeat() {
 		var message = {
 			type: 'beat',
+            handle: 'beat',
 		}
 		chatsock.send(JSON.stringify(message));
 	}
