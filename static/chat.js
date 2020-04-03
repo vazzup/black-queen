@@ -34,8 +34,9 @@ $(function() {
                 $("<td></td>").text(data.handle)
             )
             elebid.append(
-                $("<td id='bid-" + data.handle + "'></td>").text("-")
+                $("<td id='bid-" + data.handle + "'></td>").text("")
             )
+            bids.append(elebid)
             if(data.handle == $('#handle').val()){
                 $("#join").attr("disabled","disabled");
             }
