@@ -35,7 +35,7 @@ def chat_room(request, label):
     # We want to show the last 50 messages, ordered most-recent-last
     messages = reversed(room.messages.all().order_by('-timestamp')[:10])
 
-    players = room.players.order_by('-handle')[:51]
+    players = room.players.all()
 
     return render(request, "chat/room.html", {
         'room': room,
