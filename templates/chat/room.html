@@ -16,8 +16,30 @@
         <button type="submit" id="join">Join Game</button>
     </form>
   </p>
-  <h5>Your Cards</h5>
-  <div class="playingCards" style="display:table;">
+  <h5 hidden id="bids_header"> Bids </h5>
+  <h5 hidden>Your Cards</h5>
+    <table id="bids_table" hidden>
+      <thead>
+        <tr>
+            <th>Player</th>
+            <th>Bid</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for player in players %}
+          <tr>
+            <td>{{ player.handle }}</td>
+            <td id="bid-{{ player.handle }}">-</td>
+          </tr> 
+        {% endfor %}
+      </tbody>
+      <tfoot>
+      <tr>
+        <td>(*) indicates next player to bid.</td>
+      </tr> 
+      </tfoot>
+    </table>
+  <div class="playingCards simpleCards" style="display:table;">
     <ul class="table" id="hand">
 
     </ul>
@@ -43,6 +65,7 @@
             <button type="submit" id="start">Lock Room and Start Game</button>
            </form>
         </td>
+      </tr>
       </tfoot>
     </table>
 
@@ -63,6 +86,7 @@
           <input id="message" type="text" placeholder="message">
           <button type="submit" id="go">Say it</button>
         </td>
+      </tr>
       </tfoot>
     </table>
   </form>

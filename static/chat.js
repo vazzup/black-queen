@@ -28,6 +28,14 @@ $(function() {
                 $("<td></td>").text(data.handle)
             )
             players.append(ele)
+            var bids = $("#bids_table")
+            var elebid = $('<tr></tr>')
+            elebid.append(
+                $("<td></td>").text(data.handle)
+            )
+            elebid.append(
+                $("<td id='bid-" + data.handle + "'></td>").text("-")
+            )
             if(data.handle == $('#handle').val()){
                 $("#join").attr("disabled","disabled");
             }
@@ -47,6 +55,12 @@ $(function() {
             $('#players').hide();
             $('#joingame').hide();
             $('#toppart').hide();
+            $('#bids_header').removeAttr('hidden');
+            $('#cards_header').removeAttr('hidden');
+            $('#bids_table').removeAttr('hidden');
+            $('#bid-'+data['start']).html('150 (Minimum)');
+            $('#bid-'+data['next']).append('(*)');
+
             var cards = $("#hand")
             var mycards = data[$('#handle').val()]
             for (var i = 0; i < mycards.length; i++) {

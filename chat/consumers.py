@@ -93,6 +93,19 @@ def ws_receive(message):
                 for player in room.players.all():
                     cards[player.handle] = sorter(all_cards[player_idx*per_person:(player_idx*per_person)+per_person])
                     player_idx += 1
+                start_index = room.games.count() % room.players.count()
+                start_player = room.players.all()[start_index]
+                game = room.games.create()
+                game.bids.create(player=start_player, value=150)
+                # from players of the room find next after index
+                next_player = None
+                for player in room.players.all()[start_index+1:room.players.count()] + room.players.all()[0:start_index+1]:
+                    if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
+                        next_player = player
+                        break
+
+                cards['start'] = start_player.handle
+                cards['next'] = next_player.handle
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(cards)})
             else:
                 Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
