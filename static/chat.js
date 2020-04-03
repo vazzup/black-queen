@@ -36,7 +36,7 @@ $(function() {
            if(data.locked){
                alert("Room has been locked")
            }
-            else if(data.handle == $('#handle').val()){
+            else{
                 alert("You need 5 or 7 players to start the game")
             }
         }
