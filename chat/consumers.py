@@ -135,7 +135,7 @@ def ws_receive(message):
                 room.locked = True
                 room.save()
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
-                m = room.messages.create(handle='blackqueen', message=data['handle'] +' has locked the room. Do not refresh page now.')
+                m = room.messages.create(handle='blackqueen', message=data['handle'] + ' has locked the room. Do not refresh page now.')
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
                 cards = {}
                 cards['type'] = 'collect'
@@ -173,7 +173,7 @@ def ws_receive(message):
                 game.save()
                 cards['start'] = start_player.handle
                 cards['next'] = next_player.handle
-                cards['dealer'] = room.players.all()[(start_index+room.players.count()-1)%room.players.count()]
+                cards['dealer'] = room.players.all()[(start_index+room.players.count()-1)%room.players.count()].handle
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(cards)})
             else:
                 Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
