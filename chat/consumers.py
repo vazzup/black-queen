@@ -92,10 +92,9 @@ def ws_receive(message):
                 for player in room.players.all():
                     cards[player.handle] = sorter(all_cards[player_idx*per_person:(player_idx*per_person)+per_person])
                     player_idx += 1
-                start_index = room.games.count() % room.players.count()
-                log.debug(', '.join([player.handle for player in room.players.all()]))
-                start_player = room.players.all()[start_index]
                 game = room.games.create()
+                start_index = room.games.count() % room.players.count()
+                start_player = room.players.all()[start_index]
                 game.bids.create(player=start_player, value=150)
                 # from players of the room find next after index
                 next_player = None

@@ -33,7 +33,7 @@ def chat_room(request, label):
     room, created = Room.objects.get_or_create(label=label)
 
     # We want to show the last 50 messages, ordered most-recent-last
-    messages = reversed(room.messages.all().order_by('-timestamp')[:50])
+    messages = reversed(room.messages.all().order_by('-timestamp')[:10])
 
     players = room.players.order_by('-handle')[:51]
 
