@@ -20,6 +20,7 @@ class Room(models.Model):
 class Player(models.Model):
     room = models.ForeignKey(Room, related_name='players')
     handle = models.TextField()
+    timestamp = models.DateTimeField(default=timezone.now, db_index=True)
 
     def __unicode__(self):
         return self.room.name + '-' + self.handle
@@ -28,7 +29,7 @@ class Player(models.Model):
         return {'handle': self.handle, 'type': 'player'}
 
     class Meta:
-        ordering = ["handle"]
+        ordering = ["timestamp"]
 
 class Game(models.Model):
     room = models.ForeignKey(Room, related_name='games')
