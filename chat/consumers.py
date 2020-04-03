@@ -126,9 +126,7 @@ def ws_receive(message):
                     m = room.messages.create(handle='blackqueen', message=winner.handle +' has won the bid. Waiting on deciding partners and hakkam.')
                     Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
             else:
-                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
-                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps({'type': 'alert', 'message': 'Not your turn to bid'})})
-                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).discard(message.reply_channel)
+                message.reply_channel.send({'text': json.dumps({'type': 'alert', 'message': 'Not your turn to bid'})})
 
 
 
@@ -181,9 +179,7 @@ def ws_receive(message):
                 cards['dealer'] = room.players.all()[(start_index+room.players.count()-1)%room.players.count()].handle
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(cards)})
             else:
-                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
-                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
-                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).discard(message.reply_channel)
+                message.reply_channel.send({'text': json.dumps(room.as_dict())})
         if data['type'] == 'join':
             names = []
             for player in room.players.all():
@@ -194,16 +190,12 @@ def ws_receive(message):
                 m = room.messages.create(handle='blackqueen', message=data['handle'] + ' just joined the game.')
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
             else:
-                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
-                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps({'type': 'alert', 'message': 'handle already used in room, please choose another'})})
-                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).discard(message.reply_channel)
+                message.reply_channel.send({'text': json.dumps({'type': 'alert', 'message': 'handle already used in room, please choose another'})})
         if data['type'] == 'dm':
             m = room.messages.create(handle=data['handle'], message=data['message'])
             Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
         if data['type'] == 'beat':
-            Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
-            Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps({'ping': 'pong'})})
-            Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).discard(message.reply_channel)
+            message.reply_channel.send({'text': json.dumps({'ping': 'pong'})})
 
 @channel_session
 def ws_disconnect(message):
