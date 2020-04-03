@@ -66,8 +66,12 @@ def ws_receive(message):
                 room.save()
                 log.debug(room.as_dict())
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
+                m = room.messages.create(handle='blackqueen', message=data['handle'] +' has locked the room. Do not refresh page now.')
+                Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
             else:
-                Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
+                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
+                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
+                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).discard(message.reply_channel)
         if data['type'] == 'join':
             names = []
             for player in room.players.all():
@@ -75,13 +79,14 @@ def ws_receive(message):
             if data['handle'] not in names:
                 p = room.players.create(handle=data['handle'])
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(p.as_dict())})
+                m = room.messages.create(handle='blackqueen', message=data['handle'] + ' just joined the game.')
+                Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
             else:
                 Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
                 Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps({'type': 'alert', 'message': 'handle already used in room, please choose another'})})
                 Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).discard(message.reply_channel)
         if data['type'] == 'dm':
-            m = room.messages.create(**data)
-            # See above for the note about Group
+            m = room.messages.create(handle=data['handle'], message=data['message'])
             Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
 
 @channel_session
