@@ -77,7 +77,7 @@ $(function() {
                     card_suit = "hearts";
                 }
                 // 4-10 5-9 6-8 7-7
-                var card = $('<li><a class="card rank-' + card_rank + ' ' + card_suit +'><span class="rank">' + card_suit.toUpperCase() + '</span><span class="suit">&' + card_suit + ';</span></a></li>');
+                var card = $('<li><a class="card rank-' + card_rank + ' ' + card_suit +'><span class="rank">' + card_rank.toUpperCase() + '</span><span class="suit">&' + card_suit + ';</span></a></li>');
                 cards.append(card)
             }
         }
