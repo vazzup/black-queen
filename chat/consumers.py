@@ -73,7 +73,6 @@ def ws_receive(message):
             if (room.players.count() == 5 or room.players.count() == 7) and not room.locked:
                 room.locked = True
                 room.save()
-                log.debug(room.as_dict())
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
                 m = room.messages.create(handle='blackqueen', message=data['handle'] +' has locked the room. Do not refresh page now.')
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
@@ -94,9 +93,7 @@ def ws_receive(message):
                     cards[player.handle] = sorter(all_cards[player_idx*per_person:(player_idx*per_person)+per_person])
                     player_idx += 1
                 start_index = room.games.count() % room.players.count()
-                log.debug(str(start_index))
-                log.debug(str(room.games.count()))
-                log.debug(str(room.players.count()))
+                log.debug(', '.join([player.handle for player in room.players.all()]))
                 start_player = room.players.all()[start_index]
                 game = room.games.create()
                 game.bids.create(player=start_player, value=150)
