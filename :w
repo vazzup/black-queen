@@ -45,39 +45,7 @@ $(function() {
             var cards = $("#hand")
             var mycards = data[$('#handle').val()]
             for (var i = 0; i < mycards.length; i++) {
-                var card_val = mycards[i]
-                var card_rank = Math.floor(card_val/4);
-                var card_suit = card_val%4;
-                if(card_rank == 0){
-                    card_rank = 'a';
-                }
-                else if(card_rank == 1){
-                    card_rank = 'k';
-                }
-                else if(card_rank == 2){
-                    card_rank = 'q';
-                }
-                else if(card_rank == 3){
-                    card_rank = 'j';
-                }
-                else if(card_rank > 3){
-                    card_rank = 10 - (card_rank - 4);
-                    card_rank = card_rank.toString();
-                }
-                if(card_suit == 0){
-                    card_suit = "spades";
-                }
-                else if(card_suit == 1){
-                    card_suit = "diams";
-                }
-                else if(card_suit == 0){
-                    card_suit = "clubs";
-                }
-                else if(card_suit == 0){
-                    card_suit = "hearts";
-                }
-                // 4-10 5-9 6-8 7-7
-                var card = $('<li><a class="card rank-' + card_rank + ' ' + card_suit +'><span class="rank">' + card_suit.toUpperCase() + '</span><span class="suit">&' + card_suit + ';</span></a></li>');
+                var card = $('<li><a class="card rank-7 diams><span class="rank">7</span><span class="rank">7</span></a></li>')
                 cards.append(card)
             }
         }
