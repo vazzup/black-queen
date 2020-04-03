@@ -83,21 +83,19 @@ def ws_receive(message):
                 for player in room.players.all():
                     if player.handle == player_bidding.handle:
                         start_index = bidder_index
+                        break
                     bidder_index += 1
                 # from players of the room find next after index
                 next_player = None
                 next_players = []
                 for player in room.players.all()[start_index+1:room.players.count()]:
                     if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
-                        next_player = player
                         next_players.append(player)
-                        break
                 if next_player == None:
                     for player in room.players.all()[0:start_index+1]:
                         if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
-                            next_player = player
                             next_players.append(player)
-                            break
+                next_player = next_players[0]
                 if len(next_players) > 1 or (next_player and data['value']=='5'):
                     game.next_to_bid = next_player
                     game.save()
