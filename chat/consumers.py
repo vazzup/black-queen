@@ -201,9 +201,8 @@ def ws_receive(message):
             Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
         if data['type'] == 'beat':
             Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
-            Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps({'ping': 'pong')})
+            Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps({'ping': 'pong'}))
             Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).discard(message.reply_channel)
-            pass
 
 @channel_session
 def ws_disconnect(message):
