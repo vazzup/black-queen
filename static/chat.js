@@ -40,6 +40,9 @@ $(function() {
                 alert("You need 5 or 7 players to start the game")
             }
         }
+        if(data.type == 'collect'){
+            // we need to collect our own cards by making a websocket call
+        }
     };
 
     $("#chatform").on("submit", function(event) {

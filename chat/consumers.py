@@ -68,6 +68,23 @@ def ws_receive(message):
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
                 m = room.messages.create(handle='blackqueen', message=data['handle'] +' has locked the room. Do not refresh page now.')
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
+                cards = {}
+                cards['type'] = 'collect'
+                per_person = None
+                all_cards = None
+                if room.players.count() == 5:
+                    all_cards = range(40) + range(40)
+                    per_person = 16
+                else if room.players.count() == 7:
+                    all_cards = range(49) + range(49)
+                    per_person = 14
+                import random
+                random.shuffle(all_cards)
+                player_idx = 0
+                for player in room.players.all():
+                    cards[player.handle] = all_cards[player_idx*per_person:(player_idx*per_person)+per_person]
+                    player_idx += 1
+                Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(cards)})
             else:
                 Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
                 Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
@@ -88,6 +105,7 @@ def ws_receive(message):
         if data['type'] == 'dm':
             m = room.messages.create(handle=data['handle'], message=data['message'])
             Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
+
 
 @channel_session
 def ws_disconnect(message):
