@@ -95,14 +95,63 @@ $(function() {
                 else if(card_suit == 3){
                     card_suit = "hearts";
                 }
-                var card = $('<li><a class="card rank-' + card_rank + ' ' + card_suit +'"><span class="rank">' + card_rank.toUpperCase() + '</span><span class="suit">&' + card_suit + ';</span></a></li>');
+                var card = $('<li class="bqcard" value="'+card_val.toString()+'"><a class="card rank-' + card_rank + ' ' + card_suit +'"><span class="rank">' + card_rank.toUpperCase() + '</span><span class="suit">&' + card_suit + ';</span></a></li>');
                 cards.append(card)
+            }
+
+            // Notify the next bidder to bid
+            // enable bidding view
+            // make methods for the same
+			if($('#handle').val() == data['next']){
+                $('#bidview').attr("hidden", false)
+            }
+        }
+        if(data.type == 'bid'){
+            //new bid in town, update handle with bid
+            $('#bid-'+data['handle']).html(data['value']);
+            //update next
+            $('#bid-'+data['next']).append('(*)');
+            //unblock view if next
+			if($('#handle').val() == data['next']){
+                $('#bidview').attr("hidden", false)
             }
         }
     };
+    $( "#pass" ).click(function() {
+      if($('#handle').val()){
+            $('#bidview').attr("hidden", true)
+            $("#handle").prop("readonly", true);
+            var message = {
+                handle: $('#handle').val(),
+                type: 'bid',
+                value: '0',
+            }
+            chatsock.send(JSON.stringify(message));
+        }
+        else{
+            alert("Please enter a handle.");
+        }
+        return false;
+    });
+    $("#bidview").on("submit", function(event) {
+        if($('#handle').val()){
+            $('#bidview').attr("hidden", true)
+            $("#handle").prop("readonly", true);
+            var message = {
+                handle: $('#handle').val(),
+                type: 'bid',
+                value: '5',
+            }
+            chatsock.send(JSON.stringify(message));
+        }
+        else{
+            alert("Please enter a handle.");
+        }
+        return false;
+    });
 
     $("#chatform").on("submit", function(event) {
-        if($('#handle').val()){
+        if($('#handle').val() and $('#message').val()){
             $("#handle").prop("readonly", true);
             var message = {
                 handle: $('#handle').val(),
@@ -113,7 +162,7 @@ $(function() {
             $("#message").val('').focus();
         }
         else{
-            alert("Please enter a handle.");
+            alert("Please enter a handle and message.");
         }
         return false;
     });
@@ -126,7 +175,6 @@ $(function() {
                 type: 'start',
             }
             chatsock.send(JSON.stringify(message));
-            $("#message").val('').focus();
         }
         else{
             alert("Please enter a handle.");
@@ -141,7 +189,6 @@ $(function() {
                 type: 'join',
             }
             chatsock.send(JSON.stringify(message));
-            $("#message").val('').focus();
         }
         else{
             alert("Please enter a handle.");

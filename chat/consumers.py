@@ -68,9 +68,70 @@ def ws_receive(message):
     if data:
         log.debug('chat message room=%s handle=%s type=%s',
             room.label, data['handle'], data['type'])
+        if data['type'] == 'bid':
+            player_bidding = room.players.filter(handle=data['handle']).last()
+            game = room.games.filter(active=True).last()
+            if game.next_to_bid == player_bidding:
+                if data['value'] == '0':
+                    new_bid = game.bids.create(player=player_bidding, value=0)
+                else:
+                    game.current_bid = game.current_bid + 5
+                    new_bid = game.bids.create(player=player_bidding, value=game.current_bid)
+
+                bidder_index = 0
+                start_index = None
+                for player in room.players.all():
+                    if player.handle == player_bidding.handle:
+                        start_index = bidder_index
+                    bidder_index += 1
+                # from players of the room find next after index
+                next_player = None
+                next_players = []
+                for player in room.players.all()[start_index+1:room.players.count()]:
+                    if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
+                        next_player = player
+                        next_players.append(player)
+                        break
+                if next_player == None:
+                    for player in room.players.all()[0:start_index+1]:
+                        if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
+                            next_player = player
+                            next_players.append(player)
+                            break
+                if len(next_players) > 1 or (next_player and data['value']=='5'):
+                    game.next_to_bid = next_player
+                    game.save()
+                    bid = {}
+                    bid['next'] = next_player.handle
+                    bid['handle'] = data['handle']
+                    bid['value'] = new_bid.value
+                    bid['type'] = 'bid'
+                    Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(bid)})
+                else:
+                    game.save()
+                    winner = None
+                    for player in room.players.all():
+                        if game.bids.filter(player=player).last().value > 0:
+                            winner = player
+                            break
+
+                    # nextplayer size must be 1
+                    # bid is over, confirm that this is indeed true
+                    # send message out to start game
+                    m = room.messages.create(handle='blackqueen', message=winner.handle +' has won the bid. Waiting on deciding partners and hakkam.')
+                    Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
+            else:
+                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)
+                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).send({'text': json.dumps({'type': 'alert', 'message': 'Not your turn to bid'})})
+                Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).discard(message.reply_channel)
+
+
+
+
         if data['type'] == 'start':
             log.debug('room players' + str(room.players.count()))
             if (room.players.count() == 5 or room.players.count() == 7) and not room.locked:
+                room.owner = data['handle']
                 room.locked = True
                 room.save()
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(room.as_dict())})
@@ -107,9 +168,12 @@ def ws_receive(message):
                         if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
                             next_player = player
                             break
-
+                game.next_to_bid = next_player
+                game.minimum = start_player
+                game.save()
                 cards['start'] = start_player.handle
                 cards['next'] = next_player.handle
+                cards['dealer'] = room.players.all()[(start_index+room.players.count()-1)%room.players.count()]
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(cards)})
             else:
                 Group('chat-'+label+'player-'+data['handle'], channel_layer=message.channel_layer).add(message.reply_channel)

@@ -9,6 +9,7 @@ class Room(models.Model):
     name = models.TextField()
     label = models.SlugField(unique=True)
     locked = models.BooleanField(default=False)
+    owner = models.CharField(max_length=100, null=True, default=None)
 
     def __unicode__(self):
         return self.label
@@ -41,6 +42,8 @@ class Game(models.Model):
     partner2card = models.IntegerField(null=True, default=None)
     active = models.BooleanField(default=True)
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
+    next_to_bid = models.ForeignKey(Player, null=True, default=None, related_name='games_next_to_bid')
+    minimum = models.ForeignKey(Player, null=True, default=None, related_name='games_minimum')
 
 
     def evaluate_bid(self):
