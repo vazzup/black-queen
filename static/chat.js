@@ -196,5 +196,12 @@ $(function() {
         }
         return false;
     });
+	function heartbeat() {
+		var message = {
+			type: 'beat',
+		}
+		chatsock.send(JSON.stringify(message));
+	}
+	setInterval(doStuff, 9999);
 
 });

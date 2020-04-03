@@ -193,7 +193,8 @@ def ws_receive(message):
         if data['type'] == 'dm':
             m = room.messages.create(handle=data['handle'], message=data['message'])
             Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
-
+        if data['type'] == 'beat':
+            pass
 
 @channel_session
 def ws_disconnect(message):
