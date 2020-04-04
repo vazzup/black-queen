@@ -86,7 +86,9 @@ def ws_receive(message):
                 hand.save()
             else:
                 player_initial = set(og_cards[player.handle])
-                player_played = set([handd.entries.filter(player=player).last().card_played for handd in game.hands.all()])
+                player_played = set([])
+                if game.hands.filter(active=False).count() > 0:
+                    player_played = set([handd.entries.filter(player=player).last().card_played for handd in game.hands.all()])
                 player_now = player-initial - player_now
                 if card not in player_now:
                     valid_to_play = False
