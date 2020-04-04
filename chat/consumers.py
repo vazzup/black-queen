@@ -84,6 +84,7 @@ def ws_receive(message):
             game.save()
             partners = {}
             partners['type'] = 'partners'
+            partners['value'] = game.winning_bid
             partners['next'] = player_selecting.handle
             partners['partner1value'] = ["A", "K", "Q"][partner1value]
             partners['partner1suit'] = ["spades", "diams", "clubs", "hearts"][partner1suit]

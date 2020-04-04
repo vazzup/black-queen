@@ -134,6 +134,13 @@ $(function() {
 
             }
         }
+        if(data.type == 'partners'){
+            $('bids_header').attr("hidden", false);
+            $('bids_header').html(data['next'] + ' : ' + data['value'] + '. Partners : ' + '<a class="card rank-'+data['partner1value'].toLowerCase() + ' ' + data['partner1suit'] + '"><span class="rank">' + data['partner1value'] + '</span><span class="suit">&' + data['player1suit'] + '</span></a>')
+            if('partner2value' in data){
+                $('bids_header').append($('<a class="card rank-'+data['partner1value'].toLowerCase() + ' ' + data['partner1suit'] + '"><span class="rank">' + data['partner1value'] + '</span><span class="suit">&' + data['player1suit'] + '</span></a>'))
+            }
+        }
     };
     $( "#pass" ).click(function() {
       if($('#handle').val()){
