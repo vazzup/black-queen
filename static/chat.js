@@ -57,9 +57,9 @@ $(function() {
             $('#players').hide();
             $('#joingame').hide();
             $('#toppart').hide();
-            $('#bids_header').removeAttr('hidden');
-            $('#cards_header').removeAttr('hidden');
-            $('#bids_table').removeAttr('hidden');
+            $('#bids_header').attr('hidden', false);
+            $('#cards_header').attr('hidden', false);
+            $('#bids_table').attr('hidden', false);
             $('#bid-'+data['start']).html('150 (Minimum)');
             $('#bid-'+data['next']).html('(*)');
 
@@ -116,6 +116,19 @@ $(function() {
             //unblock view if next
 			if($('#handle').val() == data['next']){
                 $('#bidview').attr("hidden", false)
+            }
+            if(('winner' in data){
+                $('#bidview').attr("hidden", true)
+
+                $('#bids_header').html(data['winner'] + ':' + data['value'] + ' points. Selecting partners and Hakkam.');
+                $('#bids_table').attr('hidden', true);
+            }
+            if(('winner' in data) && (data['winner'] == $('#handle').val())){
+                $('#partner_view').attr(hidden, false);
+				if(data['partners'] == 5){
+					$('#partner2').attr('hidden', true);
+				}
+
             }
         }
     };
@@ -204,6 +217,6 @@ $(function() {
 		}
 		chatsock.send(JSON.stringify(message));
 	}
-	setInterval(heartbeat, 19999);
+	setInterval(heartbeat, 39999);
 
 });

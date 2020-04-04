@@ -122,6 +122,8 @@ def ws_receive(message):
                     bid['handle'] = data['handle']
                     bid['value'] = new_bid.value
                     bid['type'] = 'bid'
+                    bid['winner'] = winner.handle
+                    bid['partners'] = 2
                     Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(bid)})
                     m = room.messages.create(handle='blackqueen', message=winner.handle +' has won the bid. Waiting on deciding partners and hakkam.')
                     Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
