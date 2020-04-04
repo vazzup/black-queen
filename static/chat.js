@@ -180,7 +180,7 @@ $(function() {
         }
         return false;
     });
-    });
+
     $( "#pass" ).click(function() {
       if($('#handle').val()){
             $('#bidview').attr("hidden", true)
