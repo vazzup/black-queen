@@ -91,8 +91,8 @@ class Hand(models.Model):
             return 1
         suit_a = a%4
         val_a = a//4
-        suit_b = a%4
-        val_b = a//4
+        suit_b = b%4
+        val_b = b//4
         if suit_a != first_suit and suit_a != hakkam:
             return -1
         if suit_a == hakkam and suit_b == hakkam:
