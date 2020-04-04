@@ -75,7 +75,7 @@ def ws_receive(message):
             card = int(data['value'])
             suit = card % 4
             value = card // 4
-            hand = games.hand(active=True).last()
+            hand = game.hands.filter(active=True).last()
             valid_to_play = True
             og_cards = json.loads(game.cards)
             if hand.entries.count() == 0:
