@@ -72,8 +72,8 @@ def ws_receive(message):
         if data['type'] == 'select_partner':
             player_selecting = room.players.filter(handle=data['handle']).last()
             game = room.games.filter(active=True).last()
-			# mark the partners and shiz and then tell everyone the partners and shiz
-			hakkam = int(data['hakkam'])
+            # mark the partners and shiz and then tell everyone the partners and shiz
+            hakkam = int(data['hakkam'])
             partner1value = int(data['partner1value'])
             partner1suit = int(data['partner1suit'])
             if room.players.count() == 7:
