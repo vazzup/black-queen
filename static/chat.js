@@ -117,7 +117,7 @@ $(function() {
 			if($('#handle').val() == data['next']){
                 $('#bidview').attr("hidden", false)
             }
-            if(('winner' in data){
+            if('winner' in data){
                 $('#bidview').attr("hidden", true)
 
                 $('#bids_header').html(data['winner'] + ':' + data['value'] + ' points. Selecting partners and Hakkam.');
