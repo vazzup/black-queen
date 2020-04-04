@@ -142,6 +142,7 @@ def ws_receive(message):
                         game.hands.create()
                     else:
                         play['game_end'] = True
+                        play['owner'] = room.owner
                         # could optionally compute winner here and send it to all users
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(play)})
 
