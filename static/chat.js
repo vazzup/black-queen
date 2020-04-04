@@ -57,6 +57,11 @@ $(function() {
            $(".table").children().unbind('click');
            if(data.success){
                $("#status").attr('hidden', true);
+               if($('#handle').val() == data['player']){
+                   // congrats you just got played
+                    $('ul.table li.bqcard[value="' + data.value + '"]').first().remove();
+               }
+               // show that player played value card in the table
            }
            else{
                alert(data.message);
@@ -71,9 +76,10 @@ $(function() {
             // we need to collect our own cards by making a websocket call
             //hide some elements while at it
             //
-            $('#players').hide();
-            $('#joingame').hide();
-            $('#toppart').hide();
+            $('#players').attr('hidden', true);
+            $('#joingame').attr('hidden', true);
+            $('#toppart').attr('hidden', true);
+            $('#namediv').attr('hidden', true);
             $('#bids_header').attr('hidden', false);
             $('#cards_header').attr('hidden', false);
             $('#bids_table').attr('hidden', false);
