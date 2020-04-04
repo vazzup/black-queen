@@ -155,6 +155,7 @@ def ws_receive(message):
             game = room.games.filter(active=True).last()
             # mark the partners and shiz and then tell everyone the partners and shiz
             hakkam = int(data['hakkam'])
+            game.hakkam = hakkam
             partner1value = int(data['partner1value'])
             partner1suit = int(data['partner1suit'])
             if room.players.count() == 7:
@@ -167,6 +168,7 @@ def ws_receive(message):
             game.hands.create()
             partners = {}
             partners['type'] = 'partners'
+            partners['hakkam'] = ["spades", "diams", "clubs", "hearts"][hakkam]
             partners['value'] = game.winning_bid
             partners['next'] = player_selecting.handle
             partners['partner1value'] = ["A", "K", "Q"][partner1value]
