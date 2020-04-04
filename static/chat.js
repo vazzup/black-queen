@@ -124,7 +124,7 @@ $(function() {
                 $('#bids_table').attr('hidden', true);
             }
             if(('winner' in data) && (data['winner'] == $('#handle').val())){
-                $('#partner_view').attr(hidden, false);
+                $('#partner_view').attr('hidden', false);
 				if(data['partners'] == 1){
 					$('#partner2').attr('hidden', true);
 				}
