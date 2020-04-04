@@ -125,7 +125,7 @@ $(function() {
             }
             if(('winner' in data) && (data['winner'] == $('#handle').val())){
                 $('#partner_view').attr(hidden, false);
-				if(data['partners'] == 5){
+				if(data['partners'] == 1){
 					$('#partner2').attr('hidden', true);
 				}
 
