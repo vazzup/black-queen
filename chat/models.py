@@ -86,16 +86,19 @@ class Hand(models.Model):
 
     def a_better_than_b(self, a, b):
         hakkam = self.game.hakkam
+        first_suit = self.first_suit
         if b == -1:
             return 1
         suit_a = a%4
         val_a = a//4
         suit_b = a%4
         val_b = a//4
+        if suit_a != first_suit and suit_a != hakkam:
+            return -1
         if suit_a == hakkam and suit_b == hakkam:
             if val_a < val_b:
                 return 1
-            if val_b > val_a:
+            if val_a > val_b:
                 return -1
             return 1
         elif suit_a == hakkam:
@@ -105,7 +108,7 @@ class Hand(models.Model):
         else:
             if val_a < val_b:
                 return 1
-            if val_b > val_a:
+            if val_a > val_b:
                 return -1
             return 1
 
@@ -135,11 +138,6 @@ class Hand(models.Model):
                 ab = self.a_better_than_b(entry.card_played, current_best)
                 points += self.get_points(entry.card_played)
                 if ab == 1:
-                    current_best = entry.card_played
-                    winner = entry.player
-                elif ab == -1:
-                    pass
-                else:
                     current_best = entry.card_played
                     winner = entry.player
         return winner, points

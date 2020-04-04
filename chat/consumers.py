@@ -85,11 +85,13 @@ def ws_receive(message):
                 hand.first_suit = suit
                 hand.save()
             else:
-                player_initial = set(og_cards[player.handle])
-                player_played = set([])
+                player_initial = og_cards[player.handle]
+                player_played = []
                 if game.hands.filter(active=False).count() > 0:
-                    player_played = set([handd.entries.filter(player=player).last().card_played for handd in game.hands.filter(active=False)])
-                player_now = player_initial - player_played
+                    player_played = [handd.entries.filter(player=player).last().card_played for handd in game.hands.filter(active=False)]
+                player_now = player_initial[:]
+                for cardd in player_played:
+                    player_now.remove(cardd)
                 if card not in player_now:
                     valid_to_play = False
                 else:
