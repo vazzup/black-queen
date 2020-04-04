@@ -162,7 +162,7 @@ $(function() {
 
         }
     };
-    $('ul.table li').click(function(e){
+    $('.playingCards').first().on('click','li.bqcard',function() {
         if($('#handle').val() && !($('#status').is(":hidden"))){
             $('#bidview').attr("hidden", true)
             $("#handle").prop("readonly", true);
