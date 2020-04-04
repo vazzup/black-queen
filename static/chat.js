@@ -151,10 +151,10 @@ $(function() {
         if(data.type == 'partners'){
             $('#bids_header').attr("hidden", false);
             $('#hakkam_header').attr("hidden", false);
-            $('#hakkam_header').html('Hakkam : ' + '<span class="suit">&' + data['hakkam'] + ';</span>');
-            $('#bids_header').html(data['next'] + ' : ' + data['value'] + ' points. Partners : ' + '<a class="card rank-'+data['partner1value'].toLowerCase() + ' ' + data['partner1suit'] + '"><span class="rank">' + data['partner1value'] + '</span><span class="suit">&' + data['partner1suit'] + ';</span></a>')
+            $('#hakkam_header').html('Hakkam : ' + '<span class="suit">&' + data['hakkam'] + ';</span>' + '. Partners : ' + '<a class="card rank-'+data['partner1value'].toLowerCase() + ' ' + data['partner1suit'] + '"><span class="rank">' + data['partner1value'] + '</span><span class="suit">&' + data['partner1suit'] + ';</span></a>');
+            $('#bids_header').html(data['next'] + ' : ' + data['value'] + ' points.')
             if('partner2value' in data){
-                $('bids_header').append($('<a class="card rank-'+data['partner2value'].toLowerCase() + ' ' + data['partner2suit'] + '"><span class="rank">' + data['partner2value'] + '</span><span class="suit">&' + data['partner2suit'] + ';</span></a>'))
+                $('hakkam_header').append($('<a class="card rank-'+data['partner2value'].toLowerCase() + ' ' + data['partner2suit'] + '"><span class="rank">' + data['partner2value'] + '</span><span class="suit">&' + data['partner2suit'] + ';</span></a>'))
             }
             if($('#handle').val() == data['next']){
                 $('#status').attr('hidden', false)

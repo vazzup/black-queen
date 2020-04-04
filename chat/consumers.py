@@ -77,6 +77,8 @@ def ws_receive(message):
             value = card // 4
             hand = game.hands.filter(active=True).last()
             valid_to_play = True
+            hand_end = False
+            game_end = False
             og_cards = json.loads(game.cards)
             if hand.entries.count() == 0:
                 hand.entries.create(player=player, card_played=card)
@@ -98,9 +100,9 @@ def ws_receive(message):
                             # last play of hand, mark hand nonactive
                             hand.active = False
                             hand.save()
-                            end_hand = True
+                            hand_end = True
                             if ((game.hands.count() == 16) and (room.players.count()==5)) or ((game.hands.count()==14) and (room.players.count()==5)):
-                                end_game = True
+                                game_end = True
                                 game.active = False
                                 game.save()
                             # check if last play of game
