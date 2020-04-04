@@ -114,7 +114,7 @@ def ws_receive(message):
                 if not game.partner1 and card == game.partner1card:
                     game.partner1 = player
                     game.save()
-                if room.player.count() == 7 and not game.partner2 and card == game.partner2card:
+                if room.players.count() == 7 and not game.partner2 and card == game.partner2card:
                     game.partner2 = player
                     game.save()
                 play = {}
