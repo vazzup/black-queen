@@ -84,7 +84,8 @@ class Hand(models.Model):
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
 
 
-    def a_better_than_b(self, a, b, hakkam=self.game.hakkam):
+    def a_better_than_b(self, a, b):
+        hakkam = self.game.hakkam
         if b == -1:
             return 1
         suit_a = a%4
