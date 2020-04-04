@@ -69,6 +69,30 @@ def ws_receive(message):
     if data:
         log.debug('chat message room=%s handle=%s type=%s data=%s',
             room.label, data['handle'], data['type'], str(data))
+        if data['type'] == 'select_partner':
+            player_selecting = room.players.filter(handle=data['handle']).last()
+            game = room.games.filter(active=True).last()
+			# mark the partners and shiz and then tell everyone the partners and shiz
+			hakkam = int(data['hakkam'])
+            partner1value = int(data['partner1value'])
+            partner1suit = int(data['partner1suit'])
+            if room.players.count() == 7:
+                partner2value = int(data['partner2value'])
+                partner2suit = int(data['partner2suit'])
+                game.partner2card = (partner2value * 4) + partner2suit
+            game.partner1card = (partner1value * 4) + partner1suit
+            game.save()
+            parners = {}
+            partners['type'] = 'partners'
+            partners['next'] = player_selecting.handle
+            partners['partner1value'] = ["A", "K", "Q"][partner1value]
+            partners['partner1suit'] = ["spades", "diams", "clubs", "hearts"][partner1suit]
+            if room.players.count() == 7:
+                partners['partner2value'] = ["A", "K", "Q"][partner2value]
+                partners['partner2suit'] = ["spades", "diams", "clubs", "hearts"][partner2suit]
+            Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(partners)})
+
+
         if data['type'] == 'bid':
             player_bidding = room.players.filter(handle=data['handle']).last()
             game = room.games.filter(active=True).last()
@@ -117,6 +141,9 @@ def ws_receive(message):
                     # nextplayer size must be 1
                     # bid is over, confirm that this is indeed true
                     # send message out to start game
+                    game.winning_bid = game.current_bid
+                    game.bid_winner = winner
+                    game.save()
                     bid = {}
                     bid['next'] = next_player.handle
                     bid['handle'] = data['handle']

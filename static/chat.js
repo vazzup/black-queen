@@ -2,6 +2,9 @@ $(function() {
     // When we're using HTTPS, use WSS too.
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
     var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
+    window.onbeforeunload = function() {
+		return "Leaving this page will end your ongoing game for everyone.";
+	};
 
     chatsock.onmessage = function(message) {
         var data = JSON.parse(message.data);
@@ -140,6 +143,25 @@ $(function() {
                 handle: $('#handle').val(),
                 type: 'bid',
                 value: '0',
+            }
+            chatsock.send(JSON.stringify(message));
+        }
+        else{
+            alert("Please enter a handle.");
+        }
+        return false;
+    });
+    $( "#select_partner" ).click(function() {
+      if($('#handle').val()){
+            $('#partner_view').attr("hidden", true)
+            var message = {
+                handle: $('#handle').val(),
+                type: 'select_partner',
+                hakkam: $('#hakkam').val(),
+                partner1value: $('#partner1value').val(),
+                partner1suit: $('#partner1suit').val(),
+                partner2value: $('#partner2value').val(),
+                partner2suit: $('#partner2suit').val(),
             }
             chatsock.send(JSON.stringify(message));
         }
