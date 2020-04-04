@@ -121,6 +121,7 @@ class Hand(models.Model):
             return 10
         if val_a == 9:
             return 5
+        return 0
 
 
     def compute_winner(self):
