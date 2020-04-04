@@ -123,7 +123,8 @@ def ws_receive(message):
                 play['message'] = str(True)
                 play['value'] = str(card)
                 play['points'] = last_entry.get_points()
-                play['next'] = [playerr.handle for idx, playerr in enumerate(room.players.all()) if room.players.all()[idx + room.players.count() - 1].handle == player.handle][0]
+                log.debug(', '.join([pp.hanlde for pp in room.players.all()]))
+                play['next'] = [playerr.handle for idx, playerr in enumerate(room.players.all()) if room.players.all()[(idx + room.players.count() - 1) % room.players.count()].handle == player.handle][0]
                 play['new_hand'] = False
                 if hand_end:
                     play['new_hand'] = True
