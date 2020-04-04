@@ -120,7 +120,7 @@ $(function() {
             if('winner' in data){
                 $('#bidview').attr("hidden", true)
 
-                $('#bids_header').html(data['winner'] + ':' + data['value'] + ' points. Selecting partners and Hakkam.');
+                $('#bids_header').html(data['winner'] + ' : ' + data['value'] + ' points. Selecting partners and Hakkam.');
                 $('#bids_table').attr('hidden', true);
             }
             if(('winner' in data) && (data['winner'] == $('#handle').val())){

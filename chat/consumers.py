@@ -120,7 +120,7 @@ def ws_receive(message):
                     bid = {}
                     bid['next'] = next_player.handle
                     bid['handle'] = data['handle']
-                    bid['value'] = new_bid.value
+                    bid['value'] = game.current_bid
                     bid['type'] = 'bid'
                     bid['winner'] = winner.handle
                     if room.players.count() == 5:
