@@ -140,6 +140,12 @@ $(function() {
             if('partner2value' in data){
                 $('bids_header').append($('<a class="card rank-'+data['partner1value'].toLowerCase() + ' ' + data['partner1suit'] + '"><span class="rank">' + data['partner1value'] + '</span><span class="suit">&' + data['player1suit'] + '</span></a>'))
             }
+            if($('#handle').val() == data['next']){
+                $('#status').attr('hidden', false)
+                $('#status').html('Your Turn, Please select card to play')
+                // Add onclick for card and send message
+            }
+
         }
     };
     $( "#pass" ).click(function() {

@@ -77,8 +77,10 @@ class Bid(models.Model):
 class Hand(models.Model):
     game = models.ForeignKey(Game, related_name='hands')
     hand_winner = models.ForeignKey(Player, null=True, default=None)
+    first_suit = models.IntegerField(null=True, default=None)
+    cards_played = models.TextField(default='[]')
     active = models.BooleanField(default=True)
-    points = models.IntegerField(null = True, default=None)
+    points = models.IntegerField(null=True, default=None)
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
 
 

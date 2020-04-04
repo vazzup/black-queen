@@ -82,6 +82,8 @@ def ws_receive(message):
                 game.partner2card = (partner2value * 4) + partner2suit
             game.partner1card = (partner1value * 4) + partner1suit
             game.save()
+            # Time for the first hand of the game
+            game.hands.create()
             partners = {}
             partners['type'] = 'partners'
             partners['value'] = game.winning_bid
