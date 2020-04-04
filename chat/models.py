@@ -84,7 +84,7 @@ class Hand(models.Model):
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
 
 
-    def a_better_than_b(a, b, hakkam):
+    def a_better_than_b(self, a, b, hakkam):
         if b == -1:
             return 1
         suit_a = a%4
@@ -109,7 +109,7 @@ class Hand(models.Model):
             return 1
 
 
-    def get_points(a):
+    def get_points(self, a):
         val_a = a//4
         suit_a = a%4
         if val_a == 2 and suit_a == 0:
@@ -130,8 +130,8 @@ class Hand(models.Model):
             winner = None
             points = 0
             for entry in self.entries.all():
-                ab = a_better_than_b(entry.card_played, current_best)
-                points += get_points(entry.card_played)
+                ab = self.a_better_than_b(entry.card_played, current_best)
+                points += self.get_points(entry.card_played)
                 if ab == 1:
                     current_best = entry.card_played
                     winner = entry.player
