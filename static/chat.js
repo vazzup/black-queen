@@ -53,6 +53,20 @@ $(function() {
                 alert("You need 5 or 7 players to start the game")
             }
         }
+        if(data.type == 'play'){
+           $(".table").children().unbind('click');
+           if(data.success){
+               $("#status").attr('hidden', true);
+           }
+           else{
+               alert(data.message);
+           }
+           if($('#handle').val() == data['next']){
+               // congrats you're next
+                $('#status').attr('hidden', false)
+                $('#status').html('Your Turn, Please select card to play')
+           }
+        }
         if(data.type == 'collect'){
             // we need to collect our own cards by making a websocket call
             //hide some elements while at it
@@ -148,6 +162,25 @@ $(function() {
 
         }
     };
+    $('ul.table li').click(function(e){
+        if($('#handle').val() && !($('#status').is(":hidden"))){
+            $('#bidview').attr("hidden", true)
+            $("#handle").prop("readonly", true);
+            var message = {
+                handle: $('#handle').val(),
+                type: 'play',
+                value: $(this).attr('value'),
+            }
+            chatsock.send(JSON.stringify(message));
+            // wait for confirmation to hide the status, disable clicking while no confirmation
+            $(".table").children().bind('click', function(){ return false; });
+        }
+        else{
+            alert("Please wait for your turn.");
+        }
+        return false;
+    });
+    });
     $( "#pass" ).click(function() {
       if($('#handle').val()){
             $('#bidview').attr("hidden", true)

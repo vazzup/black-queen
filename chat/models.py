@@ -37,14 +37,15 @@ class Game(models.Model):
     current_bid = models.IntegerField(default=150)
     winning_bid = models.IntegerField(null=True, default=None)
     bid_winner = models.ForeignKey(Player, null=True, default=None)
-    partner1 = models.IntegerField(null=True, default=None)
-    partner2 = models.IntegerField(null=True, default=None)
+    partner1 = models.ForeignKey(Player, null=True, default=None, related_name='games_partner1')
+    partner2 = models.ForeignKey(Player, null=True, default=None, related_name='games_partner2')
     partner1card = models.IntegerField(null=True, default=None)
     partner2card = models.IntegerField(null=True, default=None)
     active = models.BooleanField(default=True)
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
     next_to_bid = models.ForeignKey(Player, null=True, default=None, related_name='games_next_to_bid')
     minimum = models.ForeignKey(Player, null=True, default=None, related_name='games_minimum')
+    cards = models.TextField(null=True, default=None)
 
 
     def evaluate_bid(self):
@@ -78,7 +79,6 @@ class Hand(models.Model):
     game = models.ForeignKey(Game, related_name='hands')
     hand_winner = models.ForeignKey(Player, null=True, default=None)
     first_suit = models.IntegerField(null=True, default=None)
-    cards_played = models.TextField(default='[]')
     active = models.BooleanField(default=True)
     points = models.IntegerField(null=True, default=None)
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
@@ -152,6 +152,19 @@ class HandEntry(models.Model):
     player = models.ForeignKey(Player, null=True, default=None)
     card_played = models.IntegerField()
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
+
+    def get_points(self):
+        a = self.card_played
+        val_a = a//4
+        suit_a = a%4
+        if val_a == 2 and suit_a == 0:
+            return 30
+        if val_a == 0:
+            return 15
+        if val_a == 4:
+            return 10
+        if val_a == 9:
+            return 5
 
     def is_partner(self):
         if self.card_played == self.hand.game.partner1card and self.hand.game.partner1 == None:

@@ -69,6 +69,86 @@ def ws_receive(message):
     if data:
         log.debug('chat message room=%s handle=%s type=%s data=%s',
             room.label, data['handle'], data['type'], str(data))
+        if data['type'] == 'play':
+            player = room.players.filter(handle=data['handle']).last()
+            game = room.games.filter(active=True).last()
+            card = int(data['value'])
+            suit = card % 4
+            value = card // 4
+            hand = games.hand(active=True).last()
+            valid_to_play = True
+            og_cards = json.loads(game.cards)
+            if hand.entries.count() == 0:
+                hand.entries.create(player=player, card_played=card)
+                hand.first_suit = suit
+                hand.save()
+            else:
+                player_initial = set(og_cards[player.handle])
+                player_played = set([handd.entries.filter(player=player).last().card_played for handd in game.hands.all()])
+                player_now = player-initial - player_now
+                if card not in player_now:
+                    valid_to_play = False
+                else:
+                    player_now_suit = set([i%4 for i in player_now])
+                    if hand.first_suit != suit and hand.first_suit in player_now_suit:
+                        valid_to_play = False
+                    else:
+                        hand.entries.create(player=player, card_played=card)
+                        if hand.entries.count() == room.players.count():
+                            # last play of hand, mark hand nonactive
+                            hand.active = False
+                            hand.save()
+                            end_hand = True
+                            if ((game.hands.count() == 16) and (room.players.count()==5)) or ((game.hands.count()==14) and (room.players.count()==5)):
+                                end_game = True
+                                game.active = False
+                                game.save()
+                            # check if last play of game
+                            # prompt game end
+                            # start new hand if not
+            if valid_to_play:
+                # send everyone the played card
+                # entry already made
+                last_entry = hand.entries.all().last()
+                # update partners
+                if not game.partner1 and card == game.partner1card:
+                    game.partner1 = player
+                    game.save()
+                if room.player.count() == 7 and not game.partner2 and card == game.partner2card:
+                    game.partner2 = player
+                    game.save()
+                play = {}
+                play['type'] = 'play'
+                play['success'] = True
+                play['message'] = str(True)
+                play['value'] = str(card)
+                play['points'] = last_entry.get_points()
+                play['next'] = [playerr.handle for idx, playerr in enumerate(room.players.all()) if room.players.all()[idx + room.players.count() - 1].handle == player.handle][0]
+                play['new_hand'] = False
+                if hand_end:
+                    play['new_hand'] = True
+                    # send everyone updated points
+                    # create new hand too
+                    best_card = 101 + game.hakkam
+                    winner, points = hand.compute_winner()
+                    play['winner'] = winner.handle
+                    play['winner_points'] = points
+                    if not game_end:
+                        game.hands.create()
+                    else:
+                        play['game_end'] = True
+                        # could optionally compute winner here and send it to all users
+                Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(play)})
+
+            else:
+                play = {}
+                play['type'] = 'play'
+                play['success'] = False
+                play['message'] = "Illegal card played."
+                play['next'] = player.handle
+                message.reply_channel.send({'text': json.dumps(play)})
+
+
         if data['type'] == 'select_partner':
             player_selecting = room.players.filter(handle=data['handle']).last()
             game = room.games.filter(active=True).last()
@@ -191,7 +271,7 @@ def ws_receive(message):
                 for player in room.players.all():
                     cards[player.handle] = sorter(all_cards[player_idx*per_person:(player_idx*per_person)+per_person])
                     player_idx += 1
-                game = room.games.create()
+                game = room.games.create(cards=json.dumps(cards))
                 start_index = room.games.count() % room.players.count()
                 start_player = room.players.all()[start_index]
                 game.bids.create(player=start_player, value=150)
