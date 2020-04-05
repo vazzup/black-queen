@@ -1,25 +1,44 @@
-# Django Channels Example [![Build Status](https://travis-ci.org/jacobian/channels-example.svg?branch=master)](https://travis-ci.org/jacobian/channels-example)
+# Black Queen
 
-This is an example app demonstrating how to use (and deploy) [Django Channels](http://channels.readthedocs.org/en/latest/). It's a simple real-time chat app — like a very, very light-weight Slack. There are a bunch of rooms, and everyone in the same room can chat, in real-time, with each other (using WebSockets).
+Simple webapp for Indian card game Black Queen using django-channels(websockets)
 
-For a walkthrough of what's going on here, see [my article over on the Heroku blog](https://blog.heroku.com/archives/2016/3/17/in_deep_with_django_channels_the_future_of_real_time_apps_in_django?).
+Requirements : Redis, Postgres
 
-You can visit [my deployment of the example online](https://django-channels-example.herokuapp.com/), or deploy your own copy to Heroku with this button (which requires a free Heroku account):
+Game Rules
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/jacobian/channels-example)
+The game is played among 5 or 7 players with 2 standard decks of cards excluding some 2s for equal cards to each player.
 
-## Running locally
 
-To run this app locally, you'll need Python, Postgres, and Redis. (On my Mac, I installed [Postgres.app](http://postgresapp.com/documentation/) and Redis from Homebrew (`brew install redis`).)
+Some cards are assigned points, as follows:-
+    
+All aces: 15 points each
 
-Then, to run:
+All tens: 10 points each
 
-- Install requirements: `pip install -r requirements.txt` (you almost certainly want to do this in a virtualenv).
-- Migrate: `DATABASE_URL=postgres:///... python manage.py migrate`
-- If you use [heroku local](https://devcenter.heroku.com/articles/heroku-local), or [foreman](https://github.com/ddollar/foreman)/[forego](https://github.com/ddollar/forego), edit `.env` to add `DATABASE_URL` and `REDIS_URL`, then start `heroku local`/`foreman`/`forego`.
-- Or, to run locally with `runserver`, set `DATABASE_URL` and `REDIS_URL` in your environ, then run `python manage.py runserver`.
-- Or, to run locally with multiple proceses by setting the environ, then running the two commands (`daphne` and `runworker`) as shown in the `Procfile`.
+All fives: 5 points each
 
-## Running with Docker
+Queen of Spades: 30 points
 
-Tomas Tomecek put together a [Dockerized version of this app](https://github.com/TomasTomecek/open-house-2016-demo).
+These sum up to 150 for one deck, hence, 300 for two.
+The game begins with a bidding round - each player bids the amount of points that his 
+team (not yet decided) can make, without consulting others.
+Bidding starts at 150 points and ends when all but one player has passed on.
+
+The highest bidder then decides the trump and announces (one if 5 players else two cards) from the entire deck -
+players with these cards belong to his team, and are called his "partners".
+They don't reveal themselves as partners though. If both the cards belong to the same player, 
+he is a double partner.
+The highest bidder can also announce cards from his own stack as well.
+The game then proceeds like any other trick taking game, 
+but everyone keeps track of the number of points in the trick as well.
+One has to cleverly decide when to contribute points to the current trick and when not to, 
+based on their guess of the partners.
+
+
+
+At the end of the game, if the bidding team achieves the points they bid or more, 
+all of them get a score of the points they bid, and negative points if they loose.
+
+
+This whole process is called a round, and the game can be played for a fixed number of rounds, 
+and the person with the highest total score wins at the end.
