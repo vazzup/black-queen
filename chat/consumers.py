@@ -168,7 +168,7 @@ def ws_receive(message):
                         partners = set(partners_lis)
                         e_points = 0
                         for partnerr in partners:
-                            e_points += points_dict[partnere]
+                            e_points += points_dict[partnerr]
                         play['winning_bid'] = game.winning_bid
                         play['partners_won'] = False
 
