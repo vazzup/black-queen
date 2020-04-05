@@ -114,6 +114,8 @@ $(function() {
                // congrats you're next
                 $('#status').attr('hidden', false)
                 $('#status').html('Your Turn, Please select card to play')
+                var audio = new Audio('https://notificationsounds.com/soundfiles/9cf81d8026a9018052c429cc4e56739b/file-sounds-1145-when.mp3');
+                audio.play();
            }
             // TODO Add scorecard printing mantain this round scores until end.
             if('game_end' in data){
