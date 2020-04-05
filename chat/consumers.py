@@ -157,13 +157,15 @@ def ws_receive(message):
                 # entry already made
                 last_entry = hand.entries.all().last()
                 # update partners
+                play = {}
                 if not game.partner1 and card == game.partner1card:
                     game.partner1 = player
+                    play['partner1'] = player.handle
                     game.save()
                 if room.players.count() == 7 and not game.partner2 and card == game.partner2card:
                     game.partner2 = player
+                    play['partner2'] = player.handle
                     game.save()
-                play = {}
                 play['type'] = 'play'
                 play['clear_cards'] = False
                 if hand.entries.count() == 1:
