@@ -107,7 +107,8 @@ def ws_receive(message):
             cards['start'] = start_player.handle
             cards['next'] = next_player.handle
             cards['dealer'] = room.players.all()[(start_index+room.players.count()-1)%room.players.count()].handle
-                Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(cards)})
+            Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(cards)})
+
         if data['type'] == 'play':
             player = room.players.filter(handle=data['handle']).last()
             game = room.games.filter(active=True).last()
