@@ -87,12 +87,12 @@ $(function() {
                        var pcard_suit_string = ['spades', 'diams', 'clubs','hearts'][pcard_suit]
 
                        var ele = $('<li class="bqpointcard"><a class="card rank-'+pcard_rank_string+' '+pcard_suit_string+'"><span class="rank">'+pcard_rank_string.toUpperCase()+'</span><span class="suit">&'+pcard_suit_string+';</span></a></li>');
-                        $('points_'+data.winner).append(ele);
+                        $('#points_'+data.winner).append(ele);
                     }
 
                }
                var ele = $('<div style="display: inline-block;"><li class="bqplayedcard"><a class="card rank-'+card_rank_string+' '+card_suit_string+'"><span class="rank">'+card_rank_string.toUpperCase()+'</span><span class="suit">&'+card_suit_string+';</span></a></li><label> '+data['player']+' </label></div>')
-               $('#played_card ul').append(ele);
+               $('#played_cards ul').append(ele);
            }
            else{
                alert(data.message);
