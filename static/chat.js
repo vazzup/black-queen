@@ -61,11 +61,11 @@ $(function() {
                $("#points_table tbody tr td").filter(function () {
                     var text = $(this).html();
                     return (text == data.player || text == data.player + " (*)");
-               }).html(data.next+"");
+               }).html(data.player);
                $("#points_table tbody tr td").filter(function () {
                     var text = $(this).html();
                     return (text == data.next || text == data.next + " (*)");
-               }).html(data.player);
+               }).html(data.next + " (*)");
                if('partner1' in data){
 				   $("#points_table tbody tr td").filter(function () {
 						var text = $(this).html();
