@@ -91,7 +91,7 @@ $(function() {
                     }
 
                }
-               var ele = $('<div style="display: inline-block;"><li class="bqplayedcard"><a class="card rank-'+card_rank_string+' '+card_suit_string+'"><span class="rank">'+card_rank_string.toUpperCase()+'</span><span class="suit">&'+card_suit_string+';</span></a></li><label> '+data['player']+' </label></div>')
+               var ele = $('<div style="display: inline-block;padding-right: 10px;"><li class="bqplayedcard"><a class="card rank-'+card_rank_string+' '+card_suit_string+'"><span class="rank">'+card_rank_string.toUpperCase()+'</span><span class="suit">&'+card_suit_string+';</span></a></li><label style="font-size: 0.8em;"> '+data['player']+' </label></div>')
                $('#played_cards ul').append(ele);
            }
            else{
