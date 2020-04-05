@@ -181,7 +181,7 @@ def ws_receive(message):
                                 if playerr.handle not in partners:
                                     score[playerr.handle] += game.winning_bid
                             for partnerr in partners:
-                                if partners.count(partnerr) > 1:
+                                if partners_lis.count(partnerr) > 1:
                                     score[partnerr] -= game.winning_bid
                         play['scores'] = score
                         play['partners'] = list(partners)
