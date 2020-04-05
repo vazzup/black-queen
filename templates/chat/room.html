@@ -148,7 +148,7 @@
 
   <form id="chatform">
     <table id="chat">
-      <tbody>
+      <tbody style="display: block;height: 300px;overflow-y: auto;overflow-x: auto" id="chatbody">
         {% for message in messages %}
           <tr>
             <td>{{ message.handle }}</td>
@@ -156,7 +156,7 @@
           </tr> 
         {% endfor %}
       </tbody>
-      <tfoot>
+      <tfoot style="display: block;">
       <tr>
         <td>Say something:</td>
         <td colspan=2>

@@ -23,7 +23,8 @@ $(function() {
                 $("<td></td>").text(data.message)
             )
 
-            chat.append(ele)
+            chat.append(ele);
+            $('#chatbody').animate({scrollTop: $('#chatbody').prop("scrollHeight")}, 200);
         }
         if(data.type == 'player'){
             var players = $("#players")
@@ -61,13 +62,13 @@ $(function() {
 				   $("#points_table tbody tr td").filter(function () {
 						var text = $(this).html();
 						return text == data.partner1
-				   }).html(data.partner1+"(P)");
+				   }).html(data.partner1+" (P)");
                }
                if('partner2' in data){
 				   $("#points_table tbody tr td").filter(function () {
 						var text = $(this).html();
 						return text == data.partner2
-				   }).html(data.partner2+"(P)");
+				   }).html(data.partner2+" (P)");
                }
                if($('#handle').val() == data['player']){
                    // congrats you just got played
@@ -149,7 +150,7 @@ $(function() {
 			$("#players tbody tr td").each(function() {
 			  // Within tr we find the last td child element and get content
 				var player_name = $(this).html();
-                $('#bid-'+player_name).html('bids');
+                $('#bid-'+player_name).html('');
             });
             $('#status').attr('hidden', true);
             $('#joingame').attr('hidden', true);
@@ -165,6 +166,7 @@ $(function() {
             // When you collect your cards
             // Clear the points table
             $('#points_table tbody').empty();
+            $('#final tbody').empty();
             $('#points_table').attr('hidden', false);
             $('#played_cards').attr('hidden', false);
             // Populate new rows for points table

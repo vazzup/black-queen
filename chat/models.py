@@ -19,6 +19,7 @@ class Room(models.Model):
 
 class Player(models.Model):
     room = models.ForeignKey(Room, related_name='players')
+    score = models.IntegerField(default=0)
     handle = models.TextField()
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
 

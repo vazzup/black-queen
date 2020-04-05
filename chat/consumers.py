@@ -198,7 +198,7 @@ def ws_receive(message):
                         score = {}
                         for playerr in room.players.all():
                             points_dict[playerr.handle] = 0
-                            score[playerr.handle] = 0
+                            score[playerr.handle] = playerr.score
                         for handd in game.hands.all():
                             # find hand winner and point
                             winner, points, points_cards = handd.compute_winner()
@@ -213,7 +213,7 @@ def ws_receive(message):
                             e_points += points_dict[partnerr]
                         play['winning_bid'] = game.winning_bid
                         play['partners_won'] = False
-
+                        score = {}
                         if e_points >= game.winning_bid:
                             play['partners_won'] = True
                             for partner in partners_lis:
@@ -225,6 +225,9 @@ def ws_receive(message):
                             for partnerr in partners:
                                 if partners_lis.count(partnerr) > 1:
                                     score[partnerr] -= game.winning_bid
+                        for playerr in room.players.all():
+                            playerr.score = score[playerr.handle]
+                            playerr.save()
                         play['scores'] = score
                         play['partners'] = list(partners)
 
