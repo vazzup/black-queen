@@ -57,7 +57,7 @@ $(function() {
         if(data.type == 'play'){
            $(".table").children().unbind('click');
            if(data.success){
-               $("#status").attr('hidden', true);
+               $('#status').html(data['next'] + '\'s turn to play, please wait.')
                if('partner1' in data){
 				   $("#points_table tbody tr td").filter(function () {
 						var text = $(this).html();
