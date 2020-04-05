@@ -60,6 +60,10 @@ $(function() {
                $('#status').attr('hidden', true)
                $("#points_table tbody tr td").filter(function () {
                     var text = $(this).html();
+                    return (text == data.player || text == data.player + " (*)");
+               }).html(data.next+"");
+               $("#points_table tbody tr td").filter(function () {
+                    var text = $(this).html();
                     return (text == data.next || text == data.next + " (*)");
                }).html(data.next+" (*)");
                if('partner1' in data){
