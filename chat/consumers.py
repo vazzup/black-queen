@@ -213,7 +213,6 @@ def ws_receive(message):
                             e_points += points_dict[partnerr]
                         play['winning_bid'] = game.winning_bid
                         play['partners_won'] = False
-                        score = {}
                         if e_points >= game.winning_bid:
                             play['partners_won'] = True
                             for partner in partners_lis:
