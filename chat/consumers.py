@@ -69,6 +69,45 @@ def ws_receive(message):
     if data:
         log.debug('chat message room=%s handle=%s type=%s data=%s',
             room.label, data['handle'], data['type'], str(data))
+        if data['type'] == 'newgame':
+            cards = {}
+            cards['type'] = 'collect'
+            per_person = None
+            all_cards = None
+            if room.players.count() == 5:
+                all_cards = list(range(40)) + list(range(40))
+                per_person = 16
+            elif room.players.count() == 7:
+                all_cards = list(range(49)) + list(range(49))
+                per_person = 14
+            import random
+            random.shuffle(all_cards)
+            player_idx = 0
+            for player in room.players.all():
+                cards[player.handle] = sorter(all_cards[player_idx*per_person:(player_idx*per_person)+per_person])
+                player_idx += 1
+            game = room.games.create(cards=json.dumps(cards))
+            start_index = room.games.count() % room.players.count()
+            start_player = room.players.all()[start_index]
+            game.bids.create(player=start_player, value=150)
+            # from players of the room find next after index
+            next_player = None
+            for player in room.players.all()[start_index+1:room.players.count()]:
+                if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
+                    next_player = player
+                    break
+            if next_player == None:
+                for player in room.players.all()[0:start_index+1]:
+                    if len(game.bids.filter(player=player)) == 0 or game.bids.filter(player=player).last().value > 0:
+                        next_player = player
+                        break
+            game.next_to_bid = next_player
+            game.minimum = start_player
+            game.save()
+            cards['start'] = start_player.handle
+            cards['next'] = next_player.handle
+            cards['dealer'] = room.players.all()[(start_index+room.players.count()-1)%room.players.count()].handle
+                Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(cards)})
         if data['type'] == 'play':
             player = room.players.filter(handle=data['handle']).last()
             game = room.games.filter(active=True).last()

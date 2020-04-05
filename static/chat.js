@@ -103,12 +103,38 @@ $(function() {
                 $('#status').html('Your Turn, Please select card to play')
            }
             // TODO Add scorecard printing mantain this round scores until end.
+            if('game_end' in data){
+                $('#final').attr('hidden', false);
+                $("#players tbody tr td").each(function() {
+                    var player_name = $(this).html();
+                    var elem = $('<tr> <td> '+player_name+' </td> <td> ' + data.scores[player_name] + '</td> </tr>');
+                    $('#final').append(elem);
+
+                });
+                if(data.partners_won){
+                    $('#bids_header').html('Game Over. Partners Won.');
+                }
+                else{
+                    $('#bids_header').html('Game Over. Non-Partners Won.');
+                }
+                $('#status').html('Current Room Scores are :');
+                if('#handle').val() == data.owner){
+                    $('#new_game').attr('hidden', false)
+                }
+            }
         }
         if(data.type == 'collect'){
             // we need to collect our own cards by making a websocket call
             //hide some elements while at it
             //
             $('#players').attr('hidden', true);
+            $('#newgame').attr('hidden', true);
+			$("#players tbody tr td").each(function() {
+			  // Within tr we find the last td child element and get content
+				var player_name = $(this).html();
+                $('#bid-'+player_name).html('');
+            });
+            $('#status').attr('hidden', true);
             $('#joingame').attr('hidden', true);
             $('#toppart').attr('hidden', true);
             $('#namediv').attr('hidden', true);
@@ -124,7 +150,6 @@ $(function() {
             $('#played_cards').attr('hidden', false);
             // Populate new rows for points table
 			$("#players tbody tr td").each(function() {
-
 			  // Within tr we find the last td child element and get content
 				var player_name = $(this).html();
 				var player_points = 0;
@@ -318,8 +343,22 @@ $(function() {
         }
         return false;
     });
-    $("#joingame").on("submit", function(event) {
+    $("#newgame").on("submit", function(event) {
         if($('#handle').val()){
+            $("#handle").prop("readonly", true);
+            var message = {
+                handle: $('#handle').val(),
+                type: 'newgame',
+            }
+            chatsock.send(JSON.stringify(message));
+        }
+        else{
+            alert("Please enter a handle.");
+        }
+        return false;
+    });
+    $("#joingame").on("submit", function(event) {
+        if($('#handle').val() || ($('#handle').val().indexOf(' ')>=0)){
             $("#handle").prop("readonly", true);
             var message = {
                 handle: $('#handle').val(),
@@ -328,7 +367,7 @@ $(function() {
             chatsock.send(JSON.stringify(message));
         }
         else{
-            alert("Please enter a handle.");
+            alert("Please enter a handle without spaces.");
         }
         return false;
     });
