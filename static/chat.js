@@ -128,6 +128,7 @@ $(function() {
             //hide some elements while at it
             //
 			$('#played_cards ul').empty();
+            $('ul.table li.bqcard').each(function(){ $(this).remove();});
             $('#players').attr('hidden', true);
             $('#newgame').attr('hidden', true);
             $('#hakkam_header').attr('hidden', true);
