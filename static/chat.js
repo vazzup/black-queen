@@ -65,7 +65,7 @@ $(function() {
                $("#points_table tbody tr td").filter(function () {
                     var text = $(this).html();
                     return (text == data.next || text == data.next + " (*)");
-               }).html(data.next+" (*)");
+               }).html(data.player);
                if('partner1' in data){
 				   $("#points_table tbody tr td").filter(function () {
 						var text = $(this).html();
@@ -122,7 +122,7 @@ $(function() {
                // congrats you're next
                 $('#status').attr('hidden', false)
                 $('#status').html('Your Turn, Please select card to play')
-                var audio = new Audio('audio_file.mp3');
+                var audio = new Audio('https://notificationsounds.com/soundfiles/9cf81d8026a9018052c429cc4e56739b/file-sounds-1145-when.mp3');
                 audio.play();
            }
             // TODO Add scorecard printing mantain this round scores until end.
@@ -240,6 +240,8 @@ $(function() {
             //unblock view if next
 			if($('#handle').val() == data['next']){
                 $('#bidview').attr("hidden", false)
+                var audio = new Audio('https://notificationsounds.com/soundfiles/9cf81d8026a9018052c429cc4e56739b/file-sounds-1145-when.mp3');
+                audio.play();
             }
             if('winner' in data){
                 $('#bidview').attr("hidden", true)
@@ -252,6 +254,8 @@ $(function() {
 				if(data['partners'] == 1){
 					$('#partner2').attr('hidden', true);
 				}
+                var audio = new Audio('https://notificationsounds.com/soundfiles/9cf81d8026a9018052c429cc4e56739b/file-sounds-1145-when.mp3');
+                audio.play();
 
             }
         }
@@ -264,6 +268,8 @@ $(function() {
                 $('hakkam_header').append($('<a class="card rank-'+data['partner2value'].toLowerCase() + ' ' + data['partner2suit'] + '"><span class="rank">' + data['partner2value'] + '</span><span class="suit">&' + data['partner2suit'] + ';</span></a>'))
             }
             if($('#handle').val() == data['next']){
+                var audio = new Audio('https://notificationsounds.com/soundfiles/9cf81d8026a9018052c429cc4e56739b/file-sounds-1145-when.mp3');
+                audio.play();
                 $('#status').attr('hidden', false)
                 $('#status').html('Your Turn, Please select card to play')
                 // Add onclick for card and send message
