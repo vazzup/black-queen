@@ -179,7 +179,7 @@ def ws_receive(message):
                         else:
                             for playerr in room.players.all():
                                 if playerr.handle not in partners:
-                                    score[pplayerr.handle] += game.winning_bid
+                                    score[playerr.handle] += game.winning_bid
                             for partnerr in partners:
                                 if partners.count(partnerr) > 1:
                                     score[partnerr] -= game.winning_bid
