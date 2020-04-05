@@ -127,19 +127,23 @@ $(function() {
             // we need to collect our own cards by making a websocket call
             //hide some elements while at it
             //
+			$('#played_cards ul').empty();
             $('#players').attr('hidden', true);
             $('#newgame').attr('hidden', true);
+            $('#hakkam_header').attr('hidden', true);
             $('#final').attr('hidden', true);
 			$("#players tbody tr td").each(function() {
 			  // Within tr we find the last td child element and get content
 				var player_name = $(this).html();
-                $('#bid-'+player_name).html('');
+                $('#bid-'+player_name).html('bids');
             });
             $('#status').attr('hidden', true);
             $('#joingame').attr('hidden', true);
+            $('#points_table').attr('hidden', true);
             $('#toppart').attr('hidden', true);
             $('#namediv').attr('hidden', true);
             $('#bids_header').attr('hidden', false);
+            $('#bids_header').html('Bids');
             $('#cards_header').attr('hidden', false);
             $('#bids_table').attr('hidden', false);
             $('#bid-'+data['start']).html('150 (Minimum)');
