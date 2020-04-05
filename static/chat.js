@@ -57,17 +57,18 @@ $(function() {
            $(".table").children().unbind('click');
            if(data.success){
                $("#status").attr('hidden', true);
-               if('player1' in data){
+               if('partner1' in data){
 				   $("#points_table tbody tr td").filter(function () {
 						var text = $(this).html();
-						return text == data.player1
-				   }).html(data.player1+"(P)");
+						return text == data.partner1
+				   }).html(data.partner1+"(P)");
                }
-               if('player2' in data){
+               if('partner2' in data){
 				   $("#points_table tbody tr td").filter(function () {
 						var text = $(this).html();
-						return text == data.player2
-				   }).html(data.player2+"(P)");
+						return text == data.partner2
+				   }).html(data.partner2+"(P)");
+               }
                if($('#handle').val() == data['player']){
                    // congrats you just got played
                     $('ul.table li.bqcard[value="' + data.value + '"]').first().remove();
