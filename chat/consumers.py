@@ -125,7 +125,7 @@ def ws_receive(message):
                     game.save()
                 play = {}
                 play['type'] = 'play'
-                play['clear_cards' = False
+                play['clear_cards'] = False
                 if hand.entries.count() == 1:
                     play['clear_cards'] = True
                 play['success'] = True
