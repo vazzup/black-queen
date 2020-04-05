@@ -150,7 +150,41 @@ def ws_receive(message):
                         play['new_hand'] = False
                         play['game_end'] = True
                         play['owner'] = room.owner
+                        # Get last game, compute game winner, and find points for each user
+                        points_dict = {}
+                        score = {}
+                        for playerr in room.players.all():
+                            points_dict[playerr.handle] = 0
+                            score[playerr.handle] = 0
+                        for handd in game.hands.all():
+                            # find hand winner and point
+                            winner, points, points_cards = handd.compute_winner()
+                            points_dict[winner.handle] += points
                         # could optionally compute winner here and send it to all users
+                        partners_lis = [game.bid_winner.handle , game.partner1.handle]
+                        if room.players.count() == 7:
+                            partners_lis += [game.partner2.handle]
+                        partners = set(partners_lis)
+                        e_points = 0
+                        for partnerr in partners:
+                            e_points += points_dict[partnere]
+                        play['winning_bid'] = game.winning_bid
+                        play['partners_won'] = False
+
+                        if e_points >= game.winning_bid:
+                            play['partners_won'] = True
+                            for partner in partners_lis:
+                                score[partner] += game.winning_bid
+                        else:
+                            for playerr in room.players.all():
+                                if playerr.handle not in partners:
+                                    score[pplayerr.handle] += game.winning_bid
+                            for partnerr in partners:
+                                if partners.count(partnerr) > 1:
+                                    score[partnerr] -= game.winning_bid
+                        play['scores'] = score
+                        play['partners'] = list(partners)
+
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(play)})
 
             else:
