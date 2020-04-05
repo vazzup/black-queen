@@ -118,7 +118,7 @@ $(function() {
                     $('#bids_header').html('Game Over. Non-Partners Won.');
                 }
                 $('#status').html('Current Room Scores are :');
-                if($('#handle').val() == data['owner']a){
+                if($('#handle').val() == data['owner']){
                     $('#new_game').attr('hidden', false)
                 }
             }
