@@ -134,13 +134,16 @@ class Hand(models.Model):
             hakkam = self.game.hakkam
             winner = None
             points = 0
+            points_cards = []
             for entry in self.entries.all():
                 ab = self.a_better_than_b(entry.card_played, current_best)
+                if self.get_points(entry.card_played) > 0:
+                    points_cards.append(entry.card_played)
                 points += self.get_points(entry.card_played)
                 if ab == 1:
                     current_best = entry.card_played
                     winner = entry.player
-        return winner, points
+        return winner, points, points_cards
 
 
     class Meta:

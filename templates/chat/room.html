@@ -16,47 +16,53 @@
         <button type="submit" id="join">Join Game</button>
     </form>
   </p>
-	<form id="bidview" hidden>
-		<button type="submit" id="five" style="font-size: 20px;">Bid +5</button>
-		<button type="button" id="pass" style="font-size: 20px;">Pass</button>
-	</form>
+  <div id="played_cards" class="playingCards simpleCards" style="display:table;" hidden>
+    <ul class="table" style="
+    overflow: hidden;
+    float: left;">
+    </ul>
+  </div>
+  <form id="bidview" hidden>
+    <button type="submit" id="five" style="font-size: 20px;">Bid +5</button>
+    <button type="button" id="pass" style="font-size: 20px;">Pass</button>
+  </form>
     <div id="partner_view" hidden>
         <h5> Please select your partners :</h5>
         <label for="hakkam">Hakkam : </label>
-		<select id="hakkam" style="display: inline;">
-		  <option value="0">Spades</option>
-		  <option value="1">Diamonds</option>
-		  <option value="2">Clubs</option>
-		  <option value="3">Hearts</option>
-		</select>
-		<div id="partner1">
+    <select id="hakkam" style="display: inline;">
+      <option value="0">Spades</option>
+      <option value="1">Diamonds</option>
+      <option value="2">Clubs</option>
+      <option value="3">Hearts</option>
+    </select>
+    <div id="partner1">
             <label for="partner1value">Partner 1 : </label>
-			<select id="partner1value" style="display: inline;">
-			  <option value="0">Ace</option>
-			  <option value="1">King</option>
-			  <option value="2">Queen</option>
-			</select>
-			<select id="partner1suit" style="display: inline;">
-			  <option value="0">Spades</option>
-			  <option value="1">Diamonds</option>
-			  <option value="2">Clubs</option>
-			  <option value="3">Hearts</option>
-			</select>
-		</div>
-		<div id="partner2">
+      <select id="partner1value" style="display: inline;">
+        <option value="0">Ace</option>
+        <option value="1">King</option>
+        <option value="2">Queen</option>
+      </select>
+      <select id="partner1suit" style="display: inline;">
+        <option value="0">Spades</option>
+        <option value="1">Diamonds</option>
+        <option value="2">Clubs</option>
+        <option value="3">Hearts</option>
+      </select>
+    </div>
+    <div id="partner2">
             <label for="partner2value">Partner 2 : </label>
-			<select id="partner2value" style="display: inline;">
-			  <option value="0">Ace</option>
-			  <option value="1">King</option>
-			  <option value="2">Queen</option>
-			</select>
-			<select id="partner2suit" style="display: inline;">
-			  <option value="0">Spades</option>
-			  <option value="1">Diamonds</option>
-			  <option value="2">Clubs</option>
-			  <option value="3">Hearts</option>
-			</select>
-		</div>
+      <select id="partner2value" style="display: inline;">
+        <option value="0">Ace</option>
+        <option value="1">King</option>
+        <option value="2">Queen</option>
+      </select>
+      <select id="partner2suit" style="display: inline;">
+        <option value="0">Spades</option>
+        <option value="1">Diamonds</option>
+        <option value="2">Clubs</option>
+        <option value="3">Hearts</option>
+      </select>
+    </div>
         <div>
             <button type="button" id="select_partner">Select Partners</button>
         </div>
@@ -91,6 +97,17 @@
 
     </ul>
   </div>
+    <table id="points_table">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Cards</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
   <table id="players">
       <thead>
         <tr>

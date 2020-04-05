@@ -125,9 +125,12 @@ def ws_receive(message):
                     game.save()
                 play = {}
                 play['type'] = 'play'
+                play['clear_cards' = False
+                if hand.entries.count() == 1:
+                    play['clear_cards'] = True
                 play['success'] = True
                 play['message'] = str(True)
-                play['value'] = str(card)
+                play['value'] = card
                 play['player'] = player.handle
                 play['points'] = last_entry.get_points()
                 play['next'] = [playerr.handle for idx, playerr in enumerate(room.players.all()) if room.players.all()[(idx + room.players.count() - 1) % room.players.count()].handle == player.handle][0]
@@ -137,12 +140,14 @@ def ws_receive(message):
                     # send everyone updated points
                     # create new hand too
                     best_card = 101 + game.hakkam
-                    winner, points = hand.compute_winner()
+                    winner, points, points_cards = hand.compute_winner()
                     play['winner'] = winner.handle
                     play['winner_points'] = points
+                    play['points_cards'] = points_cards
                     if not game_end:
                         game.hands.create()
                     else:
+                        play['new_hand'] = False
                         play['game_end'] = True
                         play['owner'] = room.owner
                         # could optionally compute winner here and send it to all users

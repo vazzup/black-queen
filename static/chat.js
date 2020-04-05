@@ -62,6 +62,37 @@ $(function() {
                     $('ul.table li.bqcard[value="' + data.value + '"]').first().remove();
                }
                // show that player played value card in the table
+               if(data.clear_cards){
+                    $('#played_cards ul').empty();
+               }
+               var card_val = data['value']
+               var card_rank = Math.floor(card_val/4);
+               var card_suit = card_val%4;
+               var card_rank_string = ['a', 'k', 'q', 'j', '10', '9', '8', '7', '6', '5', '4', '3', '2'][card_rank]
+               var card_suit_string = ['spades', 'diams', 'clubs','hearts'][card_suit]
+
+
+               if('winner' in  data){
+                    // We need to update the points table below
+                   //winner row needs to be appended with point cards in column2 and sum column3 with points
+                   //
+                   var existing_points = parseInt($('#points_total_'+data['winner']).html())
+                   existing_points += data.winner_points
+                   $('#points_total_'+data['winner']).html(existing_points.toString());
+                    for (index = 0; index < data.points_cards.length; index++) {
+                       var pcard = data.points_cards[index];
+                       var pcard_rank = Math.floor(pcard/4);
+                       var pcard_suit = pcard%4;
+                       var pcard_rank_string = ['a', 'k', 'q', 'j', '10', '9', '8', '7', '6', '5', '4', '3', '2'][pcard_rank]
+                       var pcard_suit_string = ['spades', 'diams', 'clubs','hearts'][pcard_suit]
+
+                       var ele = $('<li class="bqpointcard"><a class="card rank-'+pcard_rank_string+' '+pcard_suit_string+'"><span class="rank">'+pcard_rank_string.toUpperCase()+'</span><span class="suit">&'+pcard_suit_string+';</span></a></li>');
+                        $('points_'+data.winner).append(ele);
+                    }
+
+               }
+               var ele = $('<div style="display: inline-block;"><li class="bqplayedcard"><a class="card rank-'+card_rank_string+' '+card_suit_string+'"><span class="rank">'+card_rank_string.toUpperCase()+'</span><span class="suit">&'+card_suit_string+';</span></a></li><label> '+data['player']+' </label></div>')
+               $('#played_card ul').append(ele);
            }
            else{
                alert(data.message);
@@ -85,7 +116,20 @@ $(function() {
             $('#bids_table').attr('hidden', false);
             $('#bid-'+data['start']).html('150 (Minimum)');
             $('#bid-'+data['next']).html('(*)');
+            // When you collect your cards
+            // Clear the points table
+            $('#points_table tbody').empty();
+            $('#points_table').attr('hidden', false);
+            $('#played_cards').attr('hidden', false);
+            // Populate new rows for points table
+			$("#players tbody tr td").each(function() {
 
+			  // Within tr we find the last td child element and get content
+				var player_name = $(this).html();
+				var player_points = 0;
+				var ele = $('<tr><td>'+player_name+'</td><td><div class="playingCards simpleCards inText" style="display:table;"><ul class="table" id="points_'+player_name+'"></ul></div></td><td id="points_total_'+player_name+'">0</td></tr>');
+				$('#points_table').append(ele);
+			});
             var cards = $("#hand")
             var mycards = data[$('#handle').val()]
             for (var i = 0; i < mycards.length; i++) {
