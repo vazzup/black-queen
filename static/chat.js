@@ -102,6 +102,7 @@ $(function() {
                 $('#status').attr('hidden', false)
                 $('#status').html('Your Turn, Please select card to play')
            }
+            // TODO Add scorecard printing mantain this round scores until end.
         }
         if(data.type == 'collect'){
             // we need to collect our own cards by making a websocket call

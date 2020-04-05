@@ -142,6 +142,7 @@ def ws_receive(message):
                     best_card = 101 + game.hakkam
                     winner, points, points_cards = hand.compute_winner()
                     play['winner'] = winner.handle
+                    play['next'] = winner.handle
                     play['winner_points'] = points
                     play['points_cards'] = points_cards
                     if not game_end:
