@@ -57,12 +57,16 @@ $(function() {
         if(data.type == 'play'){
            $(".table").children().unbind('click');
            if(data.success){
-               $('#status').html(data['next'] + '\'s turn to play, please wait.')
+               $('#status').attr('hidden', true)
+               $("#points_table tbody tr td").filter(function () {
+                    var text = $(this).html();
+                    return (text == data.next || text == data.next + " (*)");
+               }).html(data.next+" (*)");
                if('partner1' in data){
 				   $("#points_table tbody tr td").filter(function () {
 						var text = $(this).html();
 						return text == data.partner1
-				   }).html(data.partner1+" (P)");
+				   }).html(data.partner1+" (p)");
                }
                if('partner2' in data){
 				   $("#points_table tbody tr td").filter(function () {
@@ -114,7 +118,7 @@ $(function() {
                // congrats you're next
                 $('#status').attr('hidden', false)
                 $('#status').html('Your Turn, Please select card to play')
-                var audio = new Audio('https://notificationsounds.com/soundfiles/9cf81d8026a9018052c429cc4e56739b/file-sounds-1145-when.mp3');
+                var audio = new Audio('audio_file.mp3');
                 audio.play();
            }
             // TODO Add scorecard printing mantain this round scores until end.
@@ -250,15 +254,10 @@ $(function() {
         if(data.type == 'partners'){
             $('#bids_header').attr("hidden", false);
             $('#hakkam_header').attr("hidden", false);
-            var color = {}
-            color['spades'] = 'black';
-            color['clubs'] = 'black';
-            color['diams'] = 'red';
-            color['hearts'] = 'red';
-            $('#hakkam_header').html('Hakkam : ' + '<span color='+color[data['partner1suit']]+' class="suit">&' + data['hakkam'] + ';</span>' + '. Partners : ' + '<a class="card rank-'+data['partner1value'].toLowerCase() + ' ' + data['partner1suit'] + '"><span class="rank">' + data['partner1value'] + '</span><span color='+color[data['partner1suit']]+' class="suit">&' + data['partner1suit'] + ';</span></a>');
+            $('#hakkam_header').html('Hakkam : ' + '<span class="suit">&' + data['hakkam'] + ';</span>' + '. Partners : ' + '<a class="card rank-'+data['partner1value'].toLowerCase() + ' ' + data['partner1suit'] + '"><span class="rank">' + data['partner1value'] + '</span><span class="suit">&' + data['partner1suit'] + ';</span></a>');
             $('#bids_header').html(data['next'] + ' : ' + data['value'] + ' points.')
             if('partner2value' in data){
-                $('hakkam_header').append($('<a class="card rank-'+data['partner2value'].toLowerCase() + ' ' + data['partner2suit'] + '"><span class="rank">' + data['partner2value'] + '</span><span color='+color[data['partner1suit']]+' class="suit">&' + data['partner2suit'] + ';</span></a>'))
+                $('hakkam_header').append($('<a class="card rank-'+data['partner2value'].toLowerCase() + ' ' + data['partner2suit'] + '"><span class="rank">' + data['partner2value'] + '</span><span class="suit">&' + data['partner2suit'] + ';</span></a>'))
             }
             if($('#handle').val() == data['next']){
                 $('#status').attr('hidden', false)
