@@ -129,6 +129,7 @@ $(function() {
             //
             $('#players').attr('hidden', true);
             $('#newgame').attr('hidden', true);
+            $('#final').attr('hidden', true);
 			$("#players tbody tr td").each(function() {
 			  // Within tr we find the last td child element and get content
 				var player_name = $(this).html();
