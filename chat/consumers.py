@@ -105,7 +105,7 @@ def ws_receive(message):
                             hand.active = False
                             hand.save()
                             hand_end = True
-                            if ((game.hands.count() == 16) and (room.players.count()==5)) or ((game.hands.count()==14) and (room.players.count()==5)):
+                            if ((game.hands.count() == 16) and (room.players.count()==5)) or ((game.hands.count()==14) and (room.players.count()==7)):
                                 game_end = True
                                 game.active = False
                                 game.save()
