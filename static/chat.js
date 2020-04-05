@@ -118,7 +118,7 @@ $(function() {
                     $('#bids_header').html('Game Over. Non-Partners Won.');
                 }
                 $('#status').html('Current Room Scores are :');
-                if($('#handle').val() == data.owner){
+                if($('#handle').val() == data['owner']a){
                     $('#new_game').attr('hidden', false)
                 }
             }
@@ -363,7 +363,7 @@ $(function() {
         return false;
     });
     $("#joingame").on("submit", function(event) {
-        if($('#handle').val() || ($('#handle').val().indexOf(' ')>=0)){
+        if($('#handle').val() && ($('#handle').val().indexOf(' ')<0)){
             $("#handle").prop("readonly", true);
             var message = {
                 handle: $('#handle').val(),
