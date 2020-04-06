@@ -148,6 +148,7 @@ def ws_receive(message):
                                 game.save()
                             # check if points are done then game can be considered ended
                             if game.active and game.partner1 and (room.players.count() != 7 or game.partner2):
+                                points_dict = {}
                                 for playerr in room.players.all():
                                     points_dict[playerr.handle] = 0
                                 for handd in game.hands.all():
