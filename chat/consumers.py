@@ -29,12 +29,9 @@ def ws_connect(message):
     log.debug('chat connect room=%s client=%s:%s',
         room.label, message['client'][0], message['client'][1])
 
-    # Need to be explicit about the channel layer so that testability works
-    # This may be a FIXME?
     Group('chat-'+label, channel_layer=message.channel_layer).add(message.reply_channel)
-    message.reply_channel.send({'text': json.dumps({'ping' : 'pong'})})
-
     message.channel_session['room'] = room.label
+    message.reply_channel.send({'text': json.dumps({'ping' : 'pong'})})
 
 
 def sorter(cards):
@@ -149,6 +146,29 @@ def ws_receive(message):
                                 game_end = True
                                 game.active = False
                                 game.save()
+                            # check if points are done then game can be considered ended
+                            if game.active and game.partner1 and (room.players.count() != 7 or game.partner2):
+                                for playerr in room.players.all():
+                                    points_dict[playerr.handle] = 0
+                                for handd in game.hands.all():
+                                    # find hand winner and point
+                                    winner, points, points_cards = handd.compute_winner()
+                                    points_dict[winner.handle] += points
+                                    partners_lis = [game.bid_winner.handle , game.partner1.handle]
+                                    if room.players.count() == 7:
+                                        partners_lis += [game.partner2.handle]
+                                    partners = set(partners_lis)
+                                    e_points = 0
+                                    for partnerr in partners:
+                                        e_points += points_dict[partnerr]
+                                    non_e_points = 0
+                                    for playerr in room.players.all():
+                                        if playerr.handle not in partners:
+                                            non_e_points += points_dict[playerr.handle]
+                                    if e_points >= game.winning_bid or non_e_points >= (300 - game.winning_bid + 5):
+                                        game_end = True
+                                        game.active = False
+                                        game.save()
                             # check if last play of game
                             # prompt game end
                             # start new hand if not
@@ -158,11 +178,13 @@ def ws_receive(message):
                 last_entry = hand.entries.all().last()
                 # update partners
                 play = {}
+                partner1set = False
                 if not game.partner1 and card == game.partner1card:
                     game.partner1 = player
                     play['partner1'] = player.handle
                     game.save()
-                if room.players.count() == 7 and not game.partner2 and card == game.partner2card:
+                    partner1set = True
+                if room.players.count() == 7 and not partner1set and not game.partner2 and card == game.partner2card:
                     game.partner2 = player
                     play['partner2'] = player.handle
                     game.save()
@@ -393,13 +415,16 @@ def ws_receive(message):
             names = []
             for player in room.players.all():
                 names.append(player.handle)
-            if data['handle'] not in names:
+            if data['handle'] not in names or room.locked:
                 p = room.players.create(handle=data['handle'])
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(p.as_dict())})
                 m = room.messages.create(handle='blackqueen', message=data['handle'] + ' just joined the game.')
                 Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
             else:
-                message.reply_channel.send({'text': json.dumps({'type': 'alert', 'message': 'handle already used in room, please choose another'})})
+                if room.locked:
+                    message.reply_channel.send({'text': json.dumps({'type': 'alert', 'message': 'Room is already locked'})})
+                else:
+                    message.reply_channel.send({'text': json.dumps({'type': 'alert', 'message': 'handle already used in room, please choose another'})})
         if data['type'] == 'dm':
             m = room.messages.create(handle=data['handle'], message=data['message'])
             Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
