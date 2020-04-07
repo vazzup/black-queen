@@ -200,7 +200,7 @@ def ws_receive(message):
                                 player_order.append(playerr.handle)
                             if playerr.handle == player.handle:
                                 player_seen = True
-                    player['player_order'] = player_order
+                    play['player_order'] = player_order
                     play['clear_cards'] = True
                 play['success'] = True
                 play['message'] = str(True)
