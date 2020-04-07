@@ -70,7 +70,7 @@ $(function() {
 				   $("#points_table tbody tr td").filter(function () {
 						var text = $(this).html();
 						return text == data.partner1
-				   }).html(data.partner1+" (p)");
+				   }).html(data.partner1+" (P)");
                }
                if('partner2' in data){
 				   $("#points_table tbody tr td").filter(function () {
@@ -85,6 +85,13 @@ $(function() {
                // show that player played value card in the table
                if(data.clear_cards){
                     $('#played_cards ul').empty();
+                   // first person has just played, this is a great time to show the ordering of the cards
+                   for(var i =0; i < data.player_order.length; i++){
+                        // create the name labels here.
+                       var player_name = data.player_order[i];
+                       var ele = $('<div style="display: inline-block;padding-right: 10px;"><label id="label-'+player_name+'" style="font-size: 0.8em;"> '+player_name+' </label></div>');
+                       $('#played_cards ul').append(ele);
+                   }
                }
                var card_val = data['value']
                var card_rank = Math.floor(card_val/4);
@@ -112,8 +119,8 @@ $(function() {
                     }
 
                }
-               var ele = $('<div style="display: inline-block;padding-right: 10px;"><li class="bqplayedcard"><a class="card rank-'+card_rank_string+' '+card_suit_string+'"><span class="rank">'+card_rank_string.toUpperCase()+'</span><span class="suit">&'+card_suit_string+';</span></a></li><label style="font-size: 0.8em;"> '+data['player']+' </label></div>')
-               $('#played_cards ul').append(ele);
+               var ele = $('<li class="bqplayedcard"><a class="card rank-'+card_rank_string+' '+card_suit_string+'"><span class="rank">'+card_rank_string.toUpperCase()+'</span><span class="suit">&'+card_suit_string+';</span></a></li>')
+               ele.insertBefore($('#label-'+data['player']))
            }
            else{
                alert(data.message);
