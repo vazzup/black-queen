@@ -134,6 +134,7 @@ $(function() {
            }
             // TODO Add scorecard printing mantain this round scores until end.
             if('game_end' in data){
+                $('#final tbody').empty();
                 $('#final').attr('hidden', false);
                 $("#players tbody tr td").each(function() {
                     var player_name = $(this).html();
@@ -158,12 +159,12 @@ $(function() {
             // we need to collect our own cards by making a websocket call
             //hide some elements while at it
             //
+            $('#chatform').attr('hidden', true)
 			$('#played_cards ul').empty();
             $('ul.table li.bqcard').each(function(){ $(this).remove();});
             $('#players').attr('hidden', true);
             $('#newgame').attr('hidden', true);
             $('#hakkam_header').attr('hidden', true);
-            $('#final').attr('hidden', true);
 			$("#players tbody tr td").each(function() {
 			  // Within tr we find the last td child element and get content
 				var player_name = $(this).html();
@@ -183,7 +184,6 @@ $(function() {
             // When you collect your cards
             // Clear the points table
             $('#points_table tbody').empty();
-            $('#final tbody').empty();
             $('#points_table').attr('hidden', false);
             $('#played_cards').attr('hidden', false);
             // Populate new rows for points table

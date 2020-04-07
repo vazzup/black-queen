@@ -192,14 +192,9 @@ def ws_receive(message):
                 play['type'] = 'play'
                 play['clear_cards'] = False
                 if hand.entries.count() == 1:
-                    player_order = [player.handle]
-                    player_seen = False
-                    for _ in range(2):
-                        for playerr in room.players.all():
-                            if playerr.handle != player.handle and player_seen and playerr.handle not in player_order:
-                                player_order.append(playerr.handle)
-                            if playerr.handle == player.handle:
-                                player_seen = True
+                    player_order = []
+                    for playerr in room.players.all():
+                        player_order.append(playerr.handle)
                     play['player_order'] = player_order
                     play['clear_cards'] = True
                 play['success'] = True
