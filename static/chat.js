@@ -148,8 +148,8 @@ $(function() {
                 else{
                     $('#bids_header').html('Game Over. Non-Partners Won.');
                 }
-                $('#status').attr('hidden', false)
-                $('#status').html('Current Room Scores are :');
+                $('#final_header').attr('hidden', false)
+                $('#final_header').html('Current Room Scores are :');
                 if($('#handle').val() == data['owner']){
                     $('#newgame').attr('hidden', false)
                 }
