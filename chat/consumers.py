@@ -383,7 +383,7 @@ def ws_receive(message):
 
         if data['type'] == 'start':
             log.debug('room players' + str(room.players.count()))
-            if (room.players.count() >= 5) and (room.players.count < 8) and not room.locked:
+            if (room.players.count() >= 5) and (room.players.count() < 8) and not room.locked:
             # if (room.players.count() == 5 or room.players.count() == 7) and not room.locked:
                 room.owner = data['handle']
                 room.locked = True
