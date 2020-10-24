@@ -22,5 +22,9 @@
             "quantity": 1,
             "size": "Free"
         }
+        "release": {
+          "quantity": 1,
+          "size": "Free"
+        }
     }
 }
