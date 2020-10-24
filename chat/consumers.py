@@ -72,11 +72,16 @@ def ws_receive(message):
             per_person = None
             all_cards = None
             if room.players.count() == 5:
-                all_cards = list(range(40)) + list(range(40))
-                per_person = 16
+                all_cards = list(range(50)) # Get rid of two doodi
+                # all_cards = list(range(40)) + list(range(40))
+                per_person = 10
+            elif room.players.count() == 6:
+                all_cards = list(range(48)) # Get rid of all four doodi
+                per_person = 8
             elif room.players.count() == 7:
-                all_cards = list(range(49)) + list(range(49))
-                per_person = 14
+                all_cards = list(range(49)) # Get rid of 3 doodi
+                # all_cards = list(range(49)) + list(range(49))
+                per_person = 7
             import random
             random.shuffle(all_cards)
             player_idx = 0
@@ -86,7 +91,8 @@ def ws_receive(message):
             game = room.games.create(cards=json.dumps(cards))
             start_index = room.games.count() % room.players.count()
             start_player = room.players.all()[start_index]
-            game.bids.create(player=start_player, value=150)
+            game.bids.create(player=start_player, value=55) # 55 Compulsory
+            # game.bids.create(player=start_player, value=150)
             # from players of the room find next after index
             next_player = None
             for player in room.players.all()[start_index+1:room.players.count()]:
@@ -142,12 +148,14 @@ def ws_receive(message):
                             hand.active = False
                             hand.save()
                             hand_end = True
-                            if ((game.hands.count() == 16) and (room.players.count()==5)) or ((game.hands.count()==14) and (room.players.count()==7)):
+                            if ((game.hands.count() == 10) and (room.players.count()==5)) or ((game.hands.count()==7) and (room.players.count()==7))\
+                                    or ((game.hands.count() == 8) and (room.players.count()==6)):
                                 game_end = True
                                 game.active = False
                                 game.save()
                             # check if points are done then game can be considered ended
-                            if game.active and game.partner1 and (room.players.count() != 7 or game.partner2):
+                            if game.active and game.partner1 and ((room.players.count() != 7 and room.players.count() != 6) or game.partner2):
+                            # if game.active and game.partner1 and (room.players.count() != 7 or game.partner2):
                                 points_dict = {}
                                 for playerr in room.players.all():
                                     points_dict[playerr.handle] = 0
@@ -156,7 +164,8 @@ def ws_receive(message):
                                     winner, points, points_cards = handd.compute_winner()
                                     points_dict[winner.handle] += points
                                     partners_lis = [game.bid_winner.handle , game.partner1.handle]
-                                    if room.players.count() == 7:
+                                    # if room.players.count() == 7:
+                                    if room.players.count() >= 6: # More than 6 players means 2 partners
                                         partners_lis += [game.partner2.handle]
                                     partners = set(partners_lis)
                                     e_points = 0
@@ -166,7 +175,8 @@ def ws_receive(message):
                                     for playerr in room.players.all():
                                         if playerr.handle not in partners:
                                             non_e_points += points_dict[playerr.handle]
-                                    if e_points >= game.winning_bid or non_e_points >= (300 - game.winning_bid + 5):
+                                    if e_points >= game.winning_bid or non_e_points >= (100 - game.winning_bid + 5): # Total 100 Points
+                                    # if e_points >= game.winning_bid or non_e_points >= (300 - game.winning_bid + 5):
                                         game_end = True
                                         game.active = False
                                         game.save()
@@ -185,7 +195,8 @@ def ws_receive(message):
                     play['partner1'] = player.handle
                     game.save()
                     partner1set = True
-                if room.players.count() == 7 and not partner1set and not game.partner2 and card == game.partner2card:
+                if room.players.count() >= 6 and not partner1set and not game.partner2 and card == game.partner2card:
+                # if room.players.count() == 7 and not partner1set and not game.partner2 and card == game.partner2card:
                     game.partner2 = player
                     play['partner2'] = player.handle
                     game.save()
@@ -232,7 +243,8 @@ def ws_receive(message):
                             points_dict[winner.handle] += points
                         # could optionally compute winner here and send it to all users
                         partners_lis = [game.bid_winner.handle , game.partner1.handle]
-                        if room.players.count() == 7:
+                        if room.players.count() >= 6:
+                        # if room.players.count() == 7:
                             partners_lis += [game.partner2.handle]
                         partners = set(partners_lis)
                         e_points = 0
@@ -276,7 +288,8 @@ def ws_receive(message):
             game.hakkam = hakkam
             partner1value = int(data['partner1value'])
             partner1suit = int(data['partner1suit'])
-            if room.players.count() == 7:
+            if room.players.count() >= 6:
+            # if room.players.count() == 7:
                 partner2value = int(data['partner2value'])
                 partner2suit = int(data['partner2suit'])
                 game.partner2card = (partner2value * 4) + partner2suit
@@ -291,7 +304,8 @@ def ws_receive(message):
             partners['next'] = player_selecting.handle
             partners['partner1value'] = ["A", "K", "Q"][partner1value]
             partners['partner1suit'] = ["spades", "diams", "clubs", "hearts"][partner1suit]
-            if room.players.count() == 7:
+            if room.players.count() >= 6:
+            # if room.players.count() == 7:
                 partners['partner2value'] = ["A", "K", "Q"][partner2value]
                 partners['partner2suit'] = ["spades", "diams", "clubs", "hearts"][partner2suit]
             Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(partners)})
@@ -369,7 +383,8 @@ def ws_receive(message):
 
         if data['type'] == 'start':
             log.debug('room players' + str(room.players.count()))
-            if (room.players.count() == 5 or room.players.count() == 7) and not room.locked:
+            if (room.players.count() >= 5) and (room.players.count < 8) and not room.locked:
+            # if (room.players.count() == 5 or room.players.count() == 7) and not room.locked:
                 room.owner = data['handle']
                 room.locked = True
                 room.save()
@@ -381,11 +396,18 @@ def ws_receive(message):
                 per_person = None
                 all_cards = None
                 if room.players.count() == 5:
-                    all_cards = list(range(40)) + list(range(40))
-                    per_person = 16
+                    all_cards = list(range(50))
+                    # all_cards = list(range(40)) + list(range(40))
+                    per_person = 10
+                    # per_person = 16
+                elif room.players.count() == 6:
+                    all_cards = list(range(48))
+                    per_person = 8
                 elif room.players.count() == 7:
-                    all_cards = list(range(49)) + list(range(49))
-                    per_person = 14
+                    all_cards = list(range(49))
+                    # all_cards = list(range(49)) + list(range(49))
+                    per_person = 7
+                    # per_person = 14
                 import random
                 random.shuffle(all_cards)
                 player_idx = 0
@@ -395,7 +417,8 @@ def ws_receive(message):
                 game = room.games.create(cards=json.dumps(cards))
                 start_index = room.games.count() % room.players.count()
                 start_player = room.players.all()[start_index]
-                game.bids.create(player=start_player, value=150)
+                game.bids.create(player=start_player, value=55) # 55 Compulsory
+                # game.bids.create(player=start_player, value=150)
                 # from players of the room find next after index
                 next_player = None
                 for player in room.players.all()[start_index+1:room.players.count()]:

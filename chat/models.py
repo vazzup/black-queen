@@ -35,7 +35,8 @@ class Player(models.Model):
 class Game(models.Model):
     room = models.ForeignKey(Room, related_name='games')
     hakkam = models.IntegerField(default=5)
-    current_bid = models.IntegerField(default=150)
+    # current_bid = models.IntegerField(default=150)
+    current_bid = models.IntegerField(default=55) # 55 Compulsory
     winning_bid = models.IntegerField(null=True, default=None)
     bid_winner = models.ForeignKey(Player, null=True, default=None)
     partner1 = models.ForeignKey(Player, null=True, default=None, related_name='games_partner1')
@@ -118,13 +119,16 @@ class Hand(models.Model):
         val_a = a//4
         suit_a = a%4
         if val_a == 2 and suit_a == 0:
-            return 30
+            # return 30
+            return 20 # Black Queen
         if val_a == 0:
-            return 15
+            # return 15
+            return 10 # Aces
         if val_a == 4:
-            return 10
+            # return 10
+            return 5 # 10s
         if val_a == 9:
-            return 5
+            return 5 #5s
         return 0
 
 
@@ -162,13 +166,16 @@ class HandEntry(models.Model):
         val_a = a//4
         suit_a = a%4
         if val_a == 2 and suit_a == 0:
-            return 30
+            # return 30
+            return 20 # Black Queen
         if val_a == 0:
-            return 15
+            # return 15
+            return 10 #Aces
         if val_a == 4:
-            return 10
+            # return 10
+            return 5 #10s
         if val_a == 9:
-            return 5
+            return 5 # 5s
 
     def is_partner(self):
         if self.card_played == self.hand.game.partner1card and self.hand.game.partner1 == None:
